@@ -1,3 +1,5 @@
-# Minesweeper
+Minesweeper
 
-> this is a project
+hello project!
+
+bye!
