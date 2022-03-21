@@ -13,6 +13,10 @@ public class Solver {
     public static final int MINE = 1;
     public static final int SAFE = -1;
 
+    // Connected components
+    public static final int CC_VISITED = -1; // for visited number cell while searching for CC
+    public static final int CC_UNKNOWN = 0;
+
     /**
      * basic analysis, check if all the surrouding cells of the given cell are mines or are all safe
      * @param game
@@ -87,5 +91,55 @@ public class Solver {
         if (num2 - num1 == side2.size()) res = new Pair<>(side1, side2);
         else if (num1 - num2 == side1.size()) res = new Pair<>(side2, side1);
         return res;
+    }
+
+    /**
+     * find all the connected components (connected area on the edge of numbers, in which the cells can interact with each other)
+     * @param game
+     * @return key = a List of the connected components, value = the board that indicates the id of the CC that each cell belongs
+     */
+    public static Pair<List<List<Point>>, int[][]> findConnectedComponents(Game game) {
+        List<List<Point>> ccList = new ArrayList<>();
+        int[][] ccGraph = new int[game.row][game.col];
+        int id = 1;
+        // find the points that belongs to a CC that haven't been registed and put it into a new CC
+        for (int i = 0; i < game.row; i++) {
+            for (int j = 0; j < game.col; j++) {
+                /* All the covered cells or question cells around one number cell are in the same CC.
+                   So we put the first number cell inside a queue, and each time we find a new cell of the CC, 
+                   we put the surranding number cells of this new cell of the CC into the queue and BFS to find the entire CC.
+                   The ccGraph is the board that indicates the id of the CC that each cell belongs, 
+                   but we also mark the visited number cells as CC_VISITED (which is minus) in ccGraph to prevent dead loop
+                   */
+                if (ccGraph[i][j] != CC_UNKNOWN || game.getPlayerBoard(i, j) > 8) continue;
+                Queue<Point> queue = new LinkedList<>();
+                queue.add(new Point(i, j));
+                List<Point> cc = new ArrayList<>();
+                boolean newComponent = false;
+                
+                while (!queue.isEmpty()) {
+                    Point nc = queue.poll(); // number cell
+                    if (ccGraph[nc.x][nc.y] == CC_VISITED) continue;
+                    ccGraph[nc.x][nc.y] = CC_VISITED;
+                    
+                    for (Point p : game.getSurroundingCells(nc.x, nc.y)) {
+                        if ((game.getPlayerBoard(p.x, p.y) != Game.COVERED && game.getPlayerBoard(p.x, p.y) != Game.QUESTION)) continue;
+                        if (ccGraph[p.x][p.y] == id) continue;
+                        newComponent = true;
+                        cc.add(new Point(p.x, p.y));
+                        ccGraph[p.x][p.y] = id;
+                        for (Point p2 : game.getSurroundingCells(p.x, p.y)) {
+                            if (game.getPlayerBoard(p2.x, p2.y) < 9) queue.add(p2);
+                        }
+                    }
+                }
+                if (newComponent) {
+                    ccList.add(cc);
+                    id++;
+                }
+            }
+        }
+        
+        return new Pair<>(ccList, ccGraph);
     }
 }
