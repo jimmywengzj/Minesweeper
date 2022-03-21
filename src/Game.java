@@ -1,5 +1,6 @@
 package src;
 
+import src.util.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -20,8 +21,8 @@ public class Game {
     public static final int GRAY_MINE  = 104;
 
     protected int state; // game state
-    protected int[][] playerBoard;
-    protected int row, col, mineCount;
+    protected int[][] playerBoard; // the board that the player sees (with numbers, flags, etc.)
+    protected int row, col; // num of rows and columns of the board 
     
     public Game(){
 
@@ -31,13 +32,33 @@ public class Game {
         return this.playerBoard[x][y];
     }
 
+    /**
+     * get a list of surrounding cells (8 cells if not on the edge of the board)
+     * @param x
+     * @param y
+     * @return list of surrounding cells
+     */
     public List<Point> getSurroundingCells(int x, int y) {
         List<Point> surroundingCells = new ArrayList<>();
-        for (int i = Math.max(x - 1, 0); i <= Math.min(x + 1, this.row); i++) {
-            for (int j = Math.max(y - 1, 0); j <= Math.min(y + 1, this.col); j++) {
-                surroundingCells.add(new Point(i, j));
+        for (int i = x - 1; i <= x + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                if (i != x || j != y) {
+                    if (inRange(x, y)) {
+                        surroundingCells.add(new Point(i, j));
+                    }
+                }
             }
         }
         return surroundingCells;
+    }
+
+    /**
+     * check if the coordinates are within the range of the board
+     * @param x
+     * @param y
+     * @return if the coordinates is in range
+     */
+    public boolean inRange(int x, int y) {
+        return x >= 0 && x < this.row && y >= 0 && y < this.col;
     }
 }
