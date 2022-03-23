@@ -1,6 +1,8 @@
 package src;
 import javax.swing.*; 
 import java.awt.event.*; 
+import  java.util.Locale;
+import  java.util.ResourceBundle;
 
 public class menu2 extends JFrame implements ActionListener{
     
@@ -22,7 +24,7 @@ public class menu2 extends JFrame implements ActionListener{
         expert=new JMenuItem("Expert");
         Custom=new JMenuItem("Custom Board");
         中文=new JMenuItem("中文");
-        Français=new JMenuItem("français");
+        Français=new JMenuItem("Français");
         English=new JMenuItem("English");
 
         New.addActionListener(this);
@@ -59,6 +61,12 @@ public class menu2 extends JFrame implements ActionListener{
         f.setLayout(null);
         f.setVisible(true);      
     }
+    
+    //Locale cn=Locale.CHINA;
+    //Locale en=Locale.ENGLISH;
+    private static String G="";
+    
+
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==New){
 
@@ -83,15 +91,24 @@ public class menu2 extends JFrame implements ActionListener{
 
             }
             if(e.getSource()==Français){
-
+                
+                
             }
             if(e.getSource()==English){
-
+                
             }
         }
     
-    }
+    } 
     
+    
+    public static String getPathfr(){
+        ResourceBundle rb=ResourceBundle.getBundle("resources/changelanguage_fr");
+        G=rb.getString("Game");
+        return G;
+    }
 }
+
+
 
 //Game.addSeparator(); //分割线
