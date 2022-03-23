@@ -179,7 +179,7 @@ public class Menu extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == startButton) {
-            Board board = new Board();
+            Minesweeper board = new Minesweeper();
         } else if(e.getSource() == resumeButton) {
             
             JOptionPane.showMessageDialog(this, "Are you sure to continue?");
