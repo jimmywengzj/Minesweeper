@@ -142,4 +142,35 @@ public class Solver {
         
         return new Pair<>(ccList, ccGraph);
     }
+
+    /**
+     * check the surrounding cells of a number cell to see if the number can be satisfied (legal)
+     * @param game
+     * @param board
+     * @param x
+     * @param y
+     * @return if the number cell can be satisfied
+     */
+    public static boolean isNumberCellLegal(Game game, int[][] board, int x, int y) {
+        if (board[x][y] > 8) return false;
+        List<Point> surroundingCells = game.getSurroundingCells(x, y);
+        int mineCnt = 0;
+        int uncheckedCnt = 0;
+        for (Point p : surroundingCells) {
+            switch (board[p.x][p.y]) {
+                case Game.FLAG:
+                case Game.MINE:
+                case Game.RED_MINE:
+                case Game.GRAY_MINE:
+                    mineCnt++;
+                    break;
+                case Game.COVERED:
+                case Game.QUESTION:
+                    uncheckedCnt++;
+                    break;
+                default: break;
+            }
+        }
+        return mineCnt <= board[x][y] && mineCnt + uncheckedCnt >= board[x][y];
+    }
 }
