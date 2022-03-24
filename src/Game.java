@@ -141,7 +141,10 @@ public class Game {
         for(Point p : surroundingCells) {
             if(playerBoard[x][y] == CHECKED) {
                 if(infoBoard[(int)p.getX()][(int)p.getY()] == 0) {
+                    playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
                     revealCell((int)p.getX(), (int)p.getY());
+                } else if(infoBoard[(int)p.getX()][(int)p.getY()] > 0) {
+                    playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
                 }
             }
             
