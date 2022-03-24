@@ -25,10 +25,10 @@ public class Game {
     public static final int QUESTION  = 1004;
     
     // status when game over
-    public static final int MINE       = 1004;
-    public static final int NOT_MINE   = 1005;
-    public static final int WRONG_MINE = 1006;
-    public static final int WRONG_FLAG = 1007;
+    public static final int MINE       = 1005;
+    public static final int NOT_MINE   = 1006;
+    public static final int WRONG_MINE = 1007;
+    public static final int WRONG_FLAG = 1008;
 
     // three game rules
     public static final int GAME_RULE_WIN_XP  = 20011025;
