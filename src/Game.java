@@ -19,14 +19,25 @@ public class Game {
     public static final int WRONG_FLAG = 102;
     public static final int RED_MINE   = 103;
     public static final int GRAY_MINE  = 104;
+    public static final int SAFE       = 105;
 
     protected int state; // game state
     protected int[][] playerBoard; // the board that the player sees (with numbers, flags, etc.)
     protected int row, col; // num of rows and columns of the board 
+    protected int mineCount;
+
+    protected int coveredCellLeft, mineLeft;
     
     public Game(){
 
     }
+
+    public int getUncheckedCellLeft() { return this.coveredCellLeft + this.mineLeft; }
+
+    public int[][] getPlayerBoard() {
+        return this.playerBoard;
+    }
+
 
     public int getPlayerBoard(int x, int y) {
         return this.playerBoard[x][y];
