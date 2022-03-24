@@ -182,9 +182,7 @@ public class Minesweeper extends JFrame {
 
     }
 
-    public int check(int x, int y) {
 
-    }
 
 
     // getters
