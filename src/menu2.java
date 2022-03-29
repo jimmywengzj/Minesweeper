@@ -8,53 +8,53 @@ public class menu2 extends JFrame implements ActionListener{
     
     JFrame f;
     JMenuBar mb; 
-    JMenu Game, option,language;
-    JMenuItem New,restart,Beginner, intermediate, expert, Custom,中文,Français, English;
+    JMenu gameMenu, optionMenu,langMenu;
+    JMenuItem newGame,restartGame, beginner, intermediate, expert, custom, cn, fr, en;
 
     public menu2(){
         f=new JFrame();
         mb=new JMenuBar();
         
         //加入次级菜单
-        New=new JMenuItem("New");
-        restart=new JMenuItem("Restart");
+        newGame = new JMenuItem("New");
+        restartGame = new JMenuItem("Restart");
         
-        Beginner=new JMenuItem("Beginner");
-        intermediate=new JMenuItem("Intermediate");
-        expert=new JMenuItem("Expert");
-        Custom=new JMenuItem("Custom Board");
-        中文=new JMenuItem("中文");
-        Français=new JMenuItem("Français");
-        English=new JMenuItem("English");
+        beginner = new JMenuItem("Beginner");
+        intermediate = new JMenuItem("Intermediate");
+        expert = new JMenuItem("Expert");
+        custom = new JMenuItem("Custom");
+        cn = new JMenuItem("中文");
+        fr = new JMenuItem("Français");
+        en = new JMenuItem("English");
 
-        New.addActionListener(this);
-        restart.addActionListener(this);
-        Beginner.addActionListener(this);
+        newGame.addActionListener(this);
+        restartGame.addActionListener(this);
+        beginner.addActionListener(this);
         intermediate.addActionListener(this);
         expert.addActionListener(this);
-        Custom.addActionListener(this);
-        中文.addActionListener(this);
-        Français.addActionListener(this);
-        English.addActionListener(this);
+        custom.addActionListener(this);
+        cn.addActionListener(this);
+        fr.addActionListener(this);
+        en.addActionListener(this);
 
         //加入菜单
-        Game=new JMenu("Game");
-        option=new JMenu("Option");
-        language=new JMenu("Language");
-        language.addActionListener(this);
-        Game.addActionListener(this);
-        option.addActionListener(this);
+        gameMenu=new JMenu("Game");
+        optionMenu=new JMenu("Option");
+        langMenu=new JMenu("Language");
+        langMenu.addActionListener(this);
+        gameMenu.addActionListener(this);
+        optionMenu.addActionListener(this);
 
         //将次级菜单加入Game
-        Game.add(New);Game.add(restart);
-        Game.addSeparator();       //分割线
-        Game.add(Beginner);Game.add(intermediate);Game.add(expert);Game.add(Custom);
+        gameMenu.add(newGame);gameMenu.add(restartGame);
+        gameMenu.addSeparator();       //分割线
+        gameMenu.add(beginner);gameMenu.add(intermediate);gameMenu.add(expert);gameMenu.add(custom);
 
         //将次级菜单加入option
-        language.add(中文); language.add(Français); language.add(English);
-        option.add(language);
+        langMenu.add(cn); langMenu.add(fr); langMenu.add(en);
+        optionMenu.add(langMenu);
 
-        mb.add(Game);mb.add(option);      //将两个菜单加入菜单栏
+        mb.add(gameMenu);mb.add(optionMenu);      //将两个菜单加入菜单栏
         f.add(mb);                        //在窗口中加入menu
         
         f.setJMenuBar(mb);  
@@ -68,33 +68,33 @@ public class menu2 extends JFrame implements ActionListener{
     
 
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==New){
+        if(e.getSource() == newGame){
 
         }
-        if(e.getSource()==restart){
+        if(e.getSource() == restartGame){
 
         }
-        if(e.getSource()==Beginner){
+        if(e.getSource() == beginner){
 
         }
-        if(e.getSource()==intermediate){
+        if(e.getSource() == intermediate){
 
         }
-        if(e.getSource()==expert){
+        if(e.getSource() == expert){
 
         }
-        if(e.getSource()==Custom){
+        if(e.getSource() == custom){
 
         }
-        if(e.getSource()==language){
-            if(e.getSource()==中文){
+        if(e.getSource() == langMenu){
+            if(e.getSource() == cn){
 
             }
-            if(e.getSource()==Français){
+            if(e.getSource() == fr){
                 
                 
             }
-            if(e.getSource()==English){
+            if(e.getSource() == en){
                 
             }
         }
