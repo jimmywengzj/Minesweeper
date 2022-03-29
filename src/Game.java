@@ -47,23 +47,13 @@ public class Game {
     protected int numMinesLeft;   
 
 
-    // playerboard states
-    /* public static final int COVERED    = 10;
-    public static final int FLAG       = 11;
-    public static final int QUESTION   = 12;
-    public static final int MINE       = 101;
-    public static final int WRONG_FLAG = 102;
-    public static final int RED_MINE   = 103;
-    public static final int GRAY_MINE  = 104; */
 
-    // protected int[][] playerBoard; // the board that the player sees (with numbers, flags, etc.)
-    protected int row, col; // num of rows and columns of the board 
-    
-    public Game(){
 
-    }
 
-    protected void initBoard(int x, int y) {  // (x,y) coordinates of the first click
+  
+
+
+    public void initBoard(int x, int y) {  // (x,y) coordinates of the first click
         // place mine using Fisher-Yates shuffle
         this.mineBoard = new boolean[this.row][this.col];
         // this.mineBoard1D = new boolean[this.row * this.col];     1D not necessary
@@ -154,6 +144,10 @@ public class Game {
             }
         }
     }
+
+
+    public int getUncheckedCellLeft() { return this.coveredCellLeft + this.mineLeft; }
+
 
     public int getPlayerBoard(int x, int y) {
         return this.playerBoard[x][y];
