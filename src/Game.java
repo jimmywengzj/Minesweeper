@@ -37,7 +37,7 @@ public class Game {
     
     // variables in game
     protected int status;                                 
-    protected int numRows, numCols, numMines, step;  
+    protected int row, col, numMines, step;  
     protected int gameRule;
     protected boolean isCheatEnabled, showMine;
     protected boolean[][] mineBoard;  // true if there's mine
@@ -50,7 +50,11 @@ public class Game {
 
 
 
-  
+    /**
+     * initialize the board on the first click
+     * @param x
+     * @param y
+     */
 
 
     public void initBoard(int x, int y) {  // (x,y) coordinates of the first click
@@ -129,20 +133,23 @@ public class Game {
      * reveal available cells using recursions
      * @param x 
      * @param y
+     * @return true if not mine
+     * 
      */
-    public void revealCell(int x, int y) {
-        List<Point> surroundingCells = new ArrayList<>();
-        surroundingCells = getSurroundingCells(x, y);
-        for(Point p : surroundingCells) {
-            if(playerBoard[x][y] == CHECKED) {
-                if(infoBoard[(int)p.getX()][(int)p.getY()] == 0) {
-                    playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
-                    revealCell((int)p.getX(), (int)p.getY());
-                } else if(infoBoard[(int)p.getX()][(int)p.getY()] > 0) {
-                    playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
-                }
+    public boolean revealCell(int x, int y) {
+        if(mineBoard[x][y]) {
+            return false;
+        }
+        playerBoard[x][y] = infoBoard[x][y];
+        if(playerBoard[x][y] == 0) {
+            for(Point p : getSurroundingCells(x, y)) {
+                revealCell(p.x, p.y);
             }
         }
+        return true;
+        
+        
+
     }
 
 
