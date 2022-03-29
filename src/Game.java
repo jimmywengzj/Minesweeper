@@ -60,44 +60,43 @@ public class Game {
     public void initBoard(int x, int y) {  // (x,y) coordinates of the first click
         // place mine using Fisher-Yates shuffle
         this.mineBoard = new boolean[this.row][this.col];
-        // this.mineBoard1D = new boolean[this.row * this.col];     1D not necessary
+        
         if(gameRule == GAME_RULE_WIN_XP) {
-            // avoid placing mine on (x,y)
-            // iterate numMines times to randomly place mine
-            for(int i = this.row * this.col - 1; i >= 0; i --) {   
-                while(i != x + y * col) {
-                    int iXLocation = i / this.col;
-                    int iYLocation = i % this.col;
-                    
-                    int randNum = (int) (Math.random() * i);
-                    int randYLocation = randNum % this.col;
-                    int randXLocation = randNum / this.col;
-                    
-                    boolean temp = mineBoard[iXLocation][iYLocation];
-                    mineBoard[iXLocation][iYLocation] = mineBoard[randXLocation][randYLocation];
-                    mineBoard[randXLocation][randYLocation] = temp;
-                } 
+            // initialize mine starting from the last position
+            this.mineBoard1D = new boolean[this.row * this.col - 1];     // 1D necessary ! It doesn't take too much...
+            for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
+                int randLocation = (int) (Math.random() * i);
+                boolean temp = mineBoard1D[i];
+                mineBoard1D[i] = mineBoard1D[randLocation];
+                mineBoard1D[randLocation] = temp;
             }
+
+            for(int i = 0; i < this.row * this.col; i++) {
+                if(i != x * col + y) {
+                    mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
+                }
+            }
+            // avoid placing mine on (x,y), which means excluding the position
+            // iterate numMines times to randomly place mine
+            
         } else if (gameRule == GAME_RULE_WIN_7) {
             // avoid placing mine on (x,y) and its surrounding cells
-            for(int i = this.row * this.col - 1; i >= 0; i --) {   
-                // ditto
+            this.mineBoard1D = new boolean[this.row * this.col - 9];
+
+            for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
+                int randLocation = (int) (Math.random() * i);
+                boolean temp = mineBoard1D[i];
+                mineBoard1D[i] = mineBoard1D[randLocation];
+                mineBoard1D[randLocation] = temp;
+            }
+
+            for(int i = 0; i < this.row * this.col; i++) {
                 int iXLocation = i / this.col;
                 int iYLocation = i % this.col;
-                mineBoard[iXLocation][iYLocation] = true;
-                
-                while((iYLocation < x - 1 || iYLocation > x + 1) 
-                    &&(iXLocation < y - 1 || iXLocation > y + 1)) {
-                    
-                    int randNum = (int) (Math.random() * i);
-                    int randXLocation = randNum / this.col;
-                    int randYLocation = randNum % this.col;
-
-                    boolean temp = mineBoard[iXLocation][iYLocation];
-                    mineBoard[iXLocation][iYLocation] = mineBoard[randXLocation][randYLocation];
-                    mineBoard[randXLocation][randYLocation] = temp;
-                } 
-                
+                if((iYLocation >= x - 1 || iYLocation <= x + 1) 
+                 &&(iXLocation >= y - 1 || iXLocation <= y + 1)) {
+                    mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
+                }
             }
         }
             // not knowing what to do with the last scenario...
@@ -147,9 +146,6 @@ public class Game {
             }
         }
         return true;
-        
-        
-
     }
 
 
