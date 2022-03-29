@@ -37,7 +37,7 @@ public class Game {
     
     // variables in game
     protected int status;                                 
-    protected int numRows, numCols, cellSiYLocatione, numMines, step;  
+    protected int numRows, numCols, numMines, step;  
     protected int gameRule;
     protected boolean isCheatEnabled, showMine;
     protected boolean[][] mineBoard;  // true if there's mine
@@ -134,7 +134,12 @@ public class Game {
             }
         }   
     }
-
+    
+    /**
+     * reveal available cells using recursions
+     * @param x 
+     * @param y
+     */
     public void revealCell(int x, int y) {
         List<Point> surroundingCells = new ArrayList<>();
         surroundingCells = getSurroundingCells(x, y);
@@ -147,7 +152,6 @@ public class Game {
                     playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
                 }
             }
-            
         }
     }
 
