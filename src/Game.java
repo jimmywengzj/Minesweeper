@@ -44,7 +44,8 @@ public class Game {
     protected boolean[] mineBoard1D;
     protected int[][] infoBoard, playerBoard, lastPlayerBoard;    // infoBoard containing all information, player's perspective see line 21
     protected int numClearCellsLeft;
-    protected int numMinesLeft;   
+    protected int numCoveredCellsLeft;
+    protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
 
 
@@ -63,6 +64,7 @@ public class Game {
         
         if(gameRule == GAME_RULE_WIN_XP) {
             // initialize mine starting from the last position
+            numCoveredCellsLeft = this.row * this.col - 1;
             this.mineBoard1D = new boolean[this.row * this.col - 1];     // 1D necessary ! It doesn't take too much...
             for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
                 mineBoard1D[i] = true;
@@ -80,11 +82,13 @@ public class Game {
                     mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
                 }
             }
+            numMinesLeft = numMines;
             // avoid placing mine on (x,y), which means excluding the position
             // iterate numMines times to randomly place mine
             
         } else if (gameRule == GAME_RULE_WIN_7) {
             // avoid placing mine on (x,y) and its surrounding cells
+            numCoveredCellsLeft = this.row * this.col - 1;
             this.mineBoard1D = new boolean[this.row * this.col - 9];
 
             for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
@@ -106,6 +110,7 @@ public class Game {
                     mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
                 }
             }
+            numMinesLeft = numMines;
         }
             // not knowing what to do with the last scenario...
         for(int j = 0; j < this.row * this.col; j++) {
@@ -157,7 +162,7 @@ public class Game {
     }
 
 
-    public int getUncheckedCellLeft() { return this.coveredCellLeft + this.mineLeft; }
+    public int getUncheckedCellLeft() { return this.coveredCellLeft + this.numMinesLeft; }
 
 
     public int getPlayerBoard(int x, int y) {
