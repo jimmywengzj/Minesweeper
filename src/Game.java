@@ -65,6 +65,10 @@ public class Game {
             // initialize mine starting from the last position
             this.mineBoard1D = new boolean[this.row * this.col - 1];     // 1D necessary ! It doesn't take too much...
             for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
+                mineBoard1D[i] = true;
+            }
+            
+            for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
                 int randLocation = (int) (Math.random() * i);
                 boolean temp = mineBoard1D[i];
                 mineBoard1D[i] = mineBoard1D[randLocation];
@@ -83,6 +87,10 @@ public class Game {
             // avoid placing mine on (x,y) and its surrounding cells
             this.mineBoard1D = new boolean[this.row * this.col - 9];
 
+            for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
+                mineBoard1D[i] = true;
+            }
+            
             for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
                 int randLocation = (int) (Math.random() * i);
                 boolean temp = mineBoard1D[i];
