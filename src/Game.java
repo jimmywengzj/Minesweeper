@@ -37,64 +37,82 @@ public class Game {
     
     // variables in game
     protected int status;                                 
-    protected int numRows, numCols, numMines, step;  
+    protected int row, col, numMines, step;  
     protected int gameRule;
     protected boolean isCheatEnabled, showMine;
     protected boolean[][] mineBoard;  // true if there's mine
     protected boolean[] mineBoard1D;
     protected int[][] infoBoard, playerBoard, lastPlayerBoard;    // infoBoard containing all information, player's perspective see line 21
-    protected int numClearCellsLeft;
-    protected int numMinesLeft;   
+    protected int numClearCellsLeft;    // number of cells without mines left 
+    protected int numCoveredCellsLeft;  //
+    protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
 
 
 
 
-  
+    /**
+     * initialize the board on the first click
+     * @param x
+     * @param y
+     */
 
 
     public void initBoard(int x, int y) {  // (x,y) coordinates of the first click
         // place mine using Fisher-Yates shuffle
         this.mineBoard = new boolean[this.row][this.col];
-        // this.mineBoard1D = new boolean[this.row * this.col];     1D not necessary
+        
         if(gameRule == GAME_RULE_WIN_XP) {
-            // avoid placing mine on (x,y)
-            // iterate numMines times to randomly place mine
-            for(int i = this.row * this.col - 1; i >= 0; i --) {   
-                while(i != x + y * col) {
-                    int iXLocation = i / this.col;
-                    int iYLocation = i % this.col;
-                    
-                    int randNum = (int) (Math.random() * i);
-                    int randYLocation = randNum % this.col;
-                    int randXLocation = randNum / this.col;
-                    
-                    boolean temp = mineBoard[iXLocation][iYLocation];
-                    mineBoard[iXLocation][iYLocation] = mineBoard[randXLocation][randYLocation];
-                    mineBoard[randXLocation][randYLocation] = temp;
-                } 
+            // initialize mine starting from the last position
+            numCoveredCellsLeft = this.row * this.col - 1;
+            numClearCellsLeft = this.row * this.col - 1 - numMines;
+            this.mineBoard1D = new boolean[this.row * this.col - 1];     // 1D necessary ! It doesn't take too much...
+            for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
+                mineBoard1D[i] = true;
             }
+            
+            for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
+                int randLocation = (int) (Math.random() * i);
+                boolean temp = mineBoard1D[i];
+                mineBoard1D[i] = mineBoard1D[randLocation];
+                mineBoard1D[randLocation] = temp;
+            }
+
+            for(int i = 0; i < this.row * this.col; i++) {
+                if(i != x * col + y) {
+                    mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
+                }
+            }
+            numMinesLeft = numMines;
+            // avoid placing mine on (x,y), which means excluding the position
+            // iterate numMines times to randomly place mine
+            
         } else if (gameRule == GAME_RULE_WIN_7) {
             // avoid placing mine on (x,y) and its surrounding cells
-            for(int i = this.row * this.col - 1; i >= 0; i --) {   
-                // ditto
+            numCoveredCellsLeft = this.row * this.col - 1;
+            this.mineBoard1D = new boolean[this.row * this.col - 9];
+            numClearCellsLeft = this.row * this.col - 1 - numMines;
+
+            for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
+                mineBoard1D[i] = true;
+            }
+            
+            for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
+                int randLocation = (int) (Math.random() * i);
+                boolean temp = mineBoard1D[i];
+                mineBoard1D[i] = mineBoard1D[randLocation];
+                mineBoard1D[randLocation] = temp;
+            }
+
+            for(int i = 0; i < this.row * this.col; i++) {
                 int iXLocation = i / this.col;
                 int iYLocation = i % this.col;
-                mineBoard[iXLocation][iYLocation] = true;
-                
-                while((iYLocation < x - 1 || iYLocation > x + 1) 
-                    &&(iXLocation < y - 1 || iXLocation > y + 1)) {
-                    
-                    int randNum = (int) (Math.random() * i);
-                    int randXLocation = randNum / this.col;
-                    int randYLocation = randNum % this.col;
-
-                    boolean temp = mineBoard[iXLocation][iYLocation];
-                    mineBoard[iXLocation][iYLocation] = mineBoard[randXLocation][randYLocation];
-                    mineBoard[randXLocation][randYLocation] = temp;
-                } 
-                
+                if((iYLocation >= x - 1 || iYLocation <= x + 1) 
+                 &&(iXLocation >= y - 1 || iXLocation <= y + 1)) {
+                    mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
+                }
             }
+            numMinesLeft = numMines;
         }
             // not knowing what to do with the last scenario...
         for(int j = 0; j < this.row * this.col; j++) {
@@ -129,24 +147,26 @@ public class Game {
      * reveal available cells using recursions
      * @param x 
      * @param y
+     * @return true if not mine
+     * 
      */
-    public void revealCell(int x, int y) {
-        List<Point> surroundingCells = new ArrayList<>();
-        surroundingCells = getSurroundingCells(x, y);
-        for(Point p : surroundingCells) {
-            if(playerBoard[x][y] == CHECKED) {
-                if(infoBoard[(int)p.getX()][(int)p.getY()] == 0) {
-                    playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
-                    revealCell((int)p.getX(), (int)p.getY());
-                } else if(infoBoard[(int)p.getX()][(int)p.getY()] > 0) {
-                    playerBoard[(int)p.getX()][(int)p.getY()] = CHECKED;
-                }
+    public boolean revealCell(int x, int y) {
+        if(mineBoard[x][y]) {
+            return false;
+        }
+        playerBoard[x][y] = infoBoard[x][y];
+        this.numCoveredCellsLeft --;
+        this.numClearCellsLeft --;
+        if(playerBoard[x][y] == 0) {
+            for(Point p : getSurroundingCells(x, y)) {
+                revealCell(p.x, p.y);
             }
         }
+        return true;
     }
 
 
-    public int getUncheckedCellLeft() { return this.coveredCellLeft + this.mineLeft; }
+    public int getUncheckedCellLeft() { return this.numClearCellsLeft; }
 
 
     public int getPlayerBoard(int x, int y) {
