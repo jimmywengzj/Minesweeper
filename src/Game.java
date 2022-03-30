@@ -19,21 +19,20 @@ public class Game {
     public static final int DIFFICULTY_CUSTOM       = 104;
     
     // status of each cell (player perspective)
-    public static final int CHECKED   = 1001;
+
     public static final int UNCHECKED = 1002;
     public static final int FLAG      = 1003; 
     public static final int QUESTION  = 1004;
     
     // status when game over
     public static final int MINE       = 1005;
-    public static final int NOT_MINE   = 1006;
+    public static final int SAFE       = 1006;
     public static final int WRONG_MINE = 1007;
     public static final int WRONG_FLAG = 1008;
 
     // three game rules
     public static final int GAME_RULE_WIN_XP  = 20011025;
     public static final int GAME_RULE_WIN_7   = 20091022;
-    public static final int GAME_RULE_UNKNOWN = 20220401;
     
     // variables in game
     protected int status;                                 
@@ -43,8 +42,7 @@ public class Game {
     protected boolean[][] mineBoard;  // true if there's mine
     protected boolean[] mineBoard1D;
     protected int[][] infoBoard, playerBoard, lastPlayerBoard;    // infoBoard containing all information, player's perspective see line 21
-    protected int numClearCellsLeft;    // number of cells without mines left 
-    protected int numCoveredCellsLeft;  //
+    protected int numCoveredCellsLeft;  // cells including unchecked, flag, and question.
     protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
 
@@ -64,54 +62,61 @@ public class Game {
         
         if(gameRule == GAME_RULE_WIN_XP) {
             // initialize mine starting from the last position
-            numCoveredCellsLeft = this.row * this.col - 1;
-            numClearCellsLeft = this.row * this.col - 1 - numMines;
+            
             this.mineBoard1D = new boolean[this.row * this.col - 1];     // 1D necessary ! It doesn't take too much...
-            for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
+            for(int i = 0; i < numMines; i++) {
                 mineBoard1D[i] = true;
             }
             
-            for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
-                int randLocation = (int) (Math.random() * i);
+            for(int i = 0; i < mineBoard1D.length; i++) {
+                int randLocation = (int) (Math.random()*(mineBoard1D.length-i)) + i;
                 boolean temp = mineBoard1D[i];
                 mineBoard1D[i] = mineBoard1D[randLocation];
                 mineBoard1D[randLocation] = temp;
             }
 
-            for(int i = 0; i < this.row * this.col; i++) {
-                if(i != x * col + y) {
-                    mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
-                }
+            for(int i = 0; i < this.row * this.col - 1; i++) {
+                int iXLocation = i / this.col;
+                int iYLocation = i % this.col;
+                mineBoard[iXLocation][iYLocation] = mineBoard1D[i];
             }
+            mineBoard[this.row - 1][this.col - 1] = mineBoard[x][y];
+            mineBoard[x][y] = false;
             numMinesLeft = numMines;
             // avoid placing mine on (x,y), which means excluding the position
             // iterate numMines times to randomly place mine
             
         } else if (gameRule == GAME_RULE_WIN_7) {
             // avoid placing mine on (x,y) and its surrounding cells
-            numCoveredCellsLeft = this.row * this.col - 1;
-            this.mineBoard1D = new boolean[this.row * this.col - 9];
-            numClearCellsLeft = this.row * this.col - 1 - numMines;
-
-            for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
+            int numSurroundingCells = getSurroundingCells(x, y).size();
+            int numClearCells = numSurroundingCells + 1;
+            this.mineBoard1D = new boolean[this.row * this.col - numClearCells];     // 1D necessary ! It doesn't take too much...
+            for(int i = 0; i < numMines; i++) {
                 mineBoard1D[i] = true;
             }
             
-            for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
-                int randLocation = (int) (Math.random() * i);
+            for(int i = 0; i < mineBoard1D.length; i++) {
+                int randLocation = (int) (Math.random()*(mineBoard1D.length-i)) + i;
                 boolean temp = mineBoard1D[i];
                 mineBoard1D[i] = mineBoard1D[randLocation];
                 mineBoard1D[randLocation] = temp;
             }
 
-            for(int i = 0; i < this.row * this.col; i++) {
+            for(int i = 0; i < this.row * this.col - numClearCells; i++) {
                 int iXLocation = i / this.col;
                 int iYLocation = i % this.col;
-                if((iYLocation >= x - 1 || iYLocation <= x + 1) 
-                 &&(iXLocation >= y - 1 || iXLocation <= y + 1)) {
-                    mineBoard[i / this.col][i % this.row] = mineBoard1D[i];
-                }
+                mineBoard[iXLocation][iYLocation] = mineBoard1D[i];
             }
+            for(Point p : getSurroundingCells(x, y)) {
+                int i = this.row * this.col - numClearCells;
+                int iXLocation = i / this.col;
+                int iYLocation = i % this.col;
+                mineBoard[iXLocation][iYLocation] = mineBoard[p.x / this.col][p.y % this.col];
+                mineBoard[p.x / this.col][p.y % this.col] = false;
+                i++;
+            }
+            mineBoard[this.row - 1][this.col - 1] = mineBoard[x][y];
+            mineBoard[x][y] = false;
             numMinesLeft = numMines;
         }
             // not knowing what to do with the last scenario...
@@ -156,7 +161,7 @@ public class Game {
         }
         playerBoard[x][y] = infoBoard[x][y];
         this.numCoveredCellsLeft --;
-        this.numClearCellsLeft --;
+
         if(playerBoard[x][y] == 0) {
             for(Point p : getSurroundingCells(x, y)) {
                 revealCell(p.x, p.y);
@@ -166,7 +171,8 @@ public class Game {
     }
 
 
-    public int getUncheckedCellLeft() { return this.numClearCellsLeft; }
+    // to be continued... 
+    // public int getUncheckedCellLeft() { }
 
 
     public int getPlayerBoard(int x, int y) {
