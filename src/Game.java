@@ -43,8 +43,8 @@ public class Game {
     protected boolean[][] mineBoard;  // true if there's mine
     protected boolean[] mineBoard1D;
     protected int[][] infoBoard, playerBoard, lastPlayerBoard;    // infoBoard containing all information, player's perspective see line 21
-    protected int numClearCellsLeft;
-    protected int numCoveredCellsLeft;
+    protected int numClearCellsLeft;    // number of cells without mines left 
+    protected int numCoveredCellsLeft;  //
     protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
 
@@ -65,6 +65,7 @@ public class Game {
         if(gameRule == GAME_RULE_WIN_XP) {
             // initialize mine starting from the last position
             numCoveredCellsLeft = this.row * this.col - 1;
+            numClearCellsLeft = this.row * this.col - 1 - numMines;
             this.mineBoard1D = new boolean[this.row * this.col - 1];     // 1D necessary ! It doesn't take too much...
             for(int i = mineBoard1D.length - 2; i >= mineBoard1D.length - numMines - 2; i++) {
                 mineBoard1D[i] = true;
@@ -90,6 +91,7 @@ public class Game {
             // avoid placing mine on (x,y) and its surrounding cells
             numCoveredCellsLeft = this.row * this.col - 1;
             this.mineBoard1D = new boolean[this.row * this.col - 9];
+            numClearCellsLeft = this.row * this.col - 1 - numMines;
 
             for(int i = mineBoard1D.length - 10; i >= mineBoard1D.length - numMines - 10; i++) {
                 mineBoard1D[i] = true;
@@ -153,6 +155,8 @@ public class Game {
             return false;
         }
         playerBoard[x][y] = infoBoard[x][y];
+        this.numCoveredCellsLeft --;
+        this.numClearCellsLeft --;
         if(playerBoard[x][y] == 0) {
             for(Point p : getSurroundingCells(x, y)) {
                 revealCell(p.x, p.y);
@@ -162,7 +166,7 @@ public class Game {
     }
 
 
-    public int getUncheckedCellLeft() { return this.coveredCellLeft + this.numMinesLeft; }
+    public int getUncheckedCellLeft() { return this.numClearCellsLeft; }
 
 
     public int getPlayerBoard(int x, int y) {
