@@ -23,7 +23,7 @@ public class Solver {
     public static final double EPSILON = 1e-5;
 
     // mathematical combinatorics, mathCombination.get(n).get(k) = C(n, k)
-    // might exeed the limit of Long so we choose BigDecimal
+    // might exeed the limit of Long so we chose BigDecimal
     public static final ArrayList<ArrayList<BigDecimal>> mathCombination;
 
     static {
@@ -37,7 +37,7 @@ public class Solver {
 
     /**
      * mathematical combinatorics, getMathCombination(n, k) = C(n, k)
-     * C(n, k) = f(n - 1, k) + f(n - 1, k - 1)
+     * C(n, k) = C(n - 1, k) + C(n - 1, k - 1)
      * @param n cell count
      * @param k mine count
      * @return a BigDecimal, combination count for n cells and k mines (with no restrictions)
@@ -59,11 +59,11 @@ public class Solver {
 
 
     /**
-     * basic analysis, check if all the surrouding cells of the given cell are mines or are all safe
+     * basic analysis, check if all the surrounding cells of the given cell are mines or are all safe
      * @param game
      * @param x
      * @param y
-     * @return if all the surrouding cells are mines / all safe / unsure
+     * @return if all the surrounding cells are mines / all safe / unsure
      */
     public static int basicAnalysis(Game game, int x, int y) {
         int num = game.getPlayerBoard(x, y);
@@ -85,7 +85,7 @@ public class Solver {
     }
 
     /**
-     * subtraction analysis, check the number of the two adjacent cells and find if we can flag or safely dig the surrouding cells
+     * subtraction analysis, check the number of the two adjacent cells and find if we can flag or safely dig the surrounding cells
      * @param game
      * @param x1 coordinates of the first cell
      * @param y1
