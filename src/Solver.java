@@ -73,7 +73,7 @@ public class Solver {
         List<Point> surroundingCells = game.getSurroundingCells(x, y);
         for (Point p : surroundingCells) {
             switch (game.getPlayerBoard(p.x, p.y)) {
-                case Game.COVERED :
+                case Game.UNCHECKED :
                 case Game.QUESTION : coveredOrQuestionCount++; break;
                 case Game.FLAG : flagCount++; break;
             }
@@ -104,12 +104,12 @@ public class Solver {
                 if (game.inRange(i, y1 - 1)) {
                     int num = game.getPlayerBoard(i, y1 - 1);
                     if (num == Game.FLAG) num1--;
-                    else if (num == Game.COVERED || num == Game.FLAG) side1.add(new Point(i, y1 - 1));
+                    else if (num == Game.UNCHECKED || num == Game.FLAG) side1.add(new Point(i, y1 - 1));
                 }
                 if (game.inRange(i, y2 + 1)) {
                     int num = game.getPlayerBoard(i, y2 + 1);
                     if (num == Game.FLAG) num2--;
-                    else if (num == Game.COVERED || num == Game.FLAG) side2.add(new Point(i, y2 + 1));
+                    else if (num == Game.UNCHECKED || num == Game.FLAG) side2.add(new Point(i, y2 + 1));
                 }
             }
         }
@@ -118,12 +118,12 @@ public class Solver {
                 if (game.inRange(x1 - 1, j)) {
                     int num = game.getPlayerBoard(x1 - 1, j);
                     if (num == Game.FLAG) num1--;
-                    else if (num == Game.COVERED || num == Game.FLAG) side1.add(new Point(x1 - 1, j));
+                    else if (num == Game.UNCHECKED || num == Game.FLAG) side1.add(new Point(x1 - 1, j));
                 }
                 if (game.inRange(x2 + 1, j)) {
                     int num = game.getPlayerBoard(x2 + 1, j);
                     if (num == Game.FLAG) num2--;
-                    else if (num == Game.COVERED || num == Game.FLAG) side2.add(new Point(x2 + 1, j));
+                    else if (num == Game.UNCHECKED || num == Game.FLAG) side2.add(new Point(x2 + 1, j));
                 }
             }
         }
@@ -164,7 +164,7 @@ public class Solver {
                     ccGraph[nc.x][nc.y] = CC_VISITED;
                     
                     for (Point p : game.getSurroundingCells(nc.x, nc.y)) {
-                        if ((game.getPlayerBoard(p.x, p.y) != Game.COVERED && game.getPlayerBoard(p.x, p.y) != Game.QUESTION)) continue;
+                        if ((game.getPlayerBoard(p.x, p.y) != Game.UNCHECKED && game.getPlayerBoard(p.x, p.y) != Game.QUESTION)) continue;
                         if (ccGraph[p.x][p.y] == id) continue;
                         newComponent = true;
                         cc.add(new Point(p.x, p.y));
@@ -201,11 +201,10 @@ public class Solver {
             switch (board[p.x][p.y]) {
                 case Game.FLAG:
                 case Game.MINE:
-                case Game.RED_MINE:
-                case Game.GRAY_MINE:
+                case Game.WRONG_MINE:
                     mineCnt++;
                     break;
-                case Game.COVERED:
+                case Game.UNCHECKED:
                 case Game.QUESTION:
                     uncheckedCnt++;
                     break;
@@ -266,14 +265,14 @@ public class Solver {
         Point cur = points.get(curIndex);
         int res = 0;
         board[cur.x][cur.y] = Game.MINE;
-        if (curMine < game.mineCount && isUncheckedCellLegal(game, board, cur.x, cur.y)) {
+        if (curMine < game.numMinesLeft && isUncheckedCellLegal(game, board, cur.x, cur.y)) {
             res += getCCCombinationCount(game, board, points, ccCombination, curIndex + 1, curMine + 1);
         }
         board[cur.x][cur.y] = Game.SAFE;
         if (isUncheckedCellLegal(game, board, cur.x, cur.y)) {
             res += getCCCombinationCount(game, board, points, ccCombination, curIndex + 1, curMine);
         }
-        board[cur.x][cur.y] = Game.COVERED;
+        board[cur.x][cur.y] = Game.UNCHECKED;
         return res;
     }
 
@@ -319,12 +318,12 @@ public class Solver {
         }
         
         // cell count for unchecked cells that aren't in a CC
-        int unknownCellCnt = game.getUncheckedCellLeft();
+        int unknownCellCnt = game.getCoveredCellsLeft();
         for (List<Point> cc : ccList) {
             unknownCellCnt -= cc.size();
         }
 
-        int maxMineCnt = game.mineCount;
+        int maxMineCnt = game.numMinesLeft;
         int minMineCnt = maxMineCnt - unknownCellCnt;
         double sumProb = 0;
 
@@ -384,14 +383,14 @@ public class Solver {
         // the expectation of the mine count in unknown cells is (total mine count - sum of the probability of cells in CC)
         // divide it by the unknown cell count and we get its probability of mine (because all the unknown cell should have the same probability)
         if (unknownCellCnt > 0) {
-            double unknownCellProb = ((double) game.mineCount - sumProb) / (double) (unknownCellCnt);
+            double unknownCellProb = ((double) game.numMinesLeft - sumProb) / (double) (unknownCellCnt);
             // remove potential error in computing
             if (Math.abs(unknownCellProb) < 1e-5) unknownCellProb = 0.0;
             else if (Math.abs(unknownCellProb - 1.0) < 1e-5) unknownCellProb = 1.0;
             for (int i = 0; i < game.row; i++) {
                 for (int j = 0; j < game.col; j++) {
                     if (ccGraph[i][j] == CC_UNKNOWN) {
-                        if (game.getPlayerBoard(i, j) == Game.COVERED || game.getPlayerBoard(i, j) == Game.QUESTION) {
+                        if (game.getPlayerBoard(i, j) == Game.UNCHECKED || game.getPlayerBoard(i, j) == Game.QUESTION) {
                             probGraph[i][j] = unknownCellProb;
                         }
                         // else if (game.getPlayerBoard(i, j) == Game.FLAG) probGraph[i][j] = 1.0;
