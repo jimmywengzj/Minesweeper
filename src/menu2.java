@@ -72,7 +72,7 @@ public class menu2 extends JFrame implements ActionListener{
         if(e.getSource()==newgame){
 
         }
-        if(e.getSource() == restartGame){
+        if(e.getSource() == restart){
 
         }
 
