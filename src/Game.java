@@ -187,7 +187,18 @@ public class Game {
         return this.numCoveredCellsLeft;
     }
 
-
+    public Point checkWrongFlag(){
+        for (int x = 0; x < this.row; x++) {
+            for (int y = 0; y < this.col; y++) {
+                if (this.playerBoard[x][y] == FLAG) {
+                    if(!this.mineBoard[x][y]) {
+                        return new Point(x, y);
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * get a list of surrounding cells (8 cells if not on the edge of the board)
