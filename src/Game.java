@@ -75,7 +75,7 @@ public class Game {
                 mineBoard1D[randLocation] = temp;
             }
 
-            for(int i = 0; i < this.row * this.col - 1; i++) {
+            for(int i = 0; i < mineBoard1D.length; i++) {
                 int iXLocation = i / this.col;
                 int iYLocation = i % this.col;
                 mineBoard[iXLocation][iYLocation] = mineBoard1D[i];
@@ -102,13 +102,13 @@ public class Game {
                 mineBoard1D[randLocation] = temp;
             }
 
-            for(int i = 0; i < this.row * this.col - numClearCells; i++) {
+            for(int i = 0; i < mineBoard1D.length; i++) {
                 int iXLocation = i / this.col;
                 int iYLocation = i % this.col;
                 mineBoard[iXLocation][iYLocation] = mineBoard1D[i];
             }
             for(Point p : getSurroundingCells(x, y)) {
-                int i = this.row * this.col - numClearCells;
+                int i = mineBoard1D.length;
                 int iXLocation = i / this.col;
                 int iYLocation = i % this.col;
                 mineBoard[iXLocation][iYLocation] = mineBoard[p.x / this.col][p.y % this.col];
@@ -126,23 +126,13 @@ public class Game {
             int jYLocation = j % this.col; 
 
             if(mineBoard[jXLocation][jYLocation]) {
-                infoBoard[jXLocation][jYLocation] = -1; // -1 if there is mine
+                infoBoard[jXLocation][jYLocation] = MINE; // 1005 if there is mine
             } else {
                 // add value to each cell the number of nearby mines
                 
-                if (jXLocation - 1 >= 0) {
-                    if (jYLocation - 1 >= 0 && this.mineBoard[jXLocation - 1][jYLocation - 1]) count++;
-                    if (this.mineBoard[jXLocation - 1][jYLocation]) count++;
-                    if (jYLocation + 1 < this.col && this.mineBoard[jXLocation - 1][jYLocation + 1]) count++;
+                for(Point p : getSurroundingCells(jXLocation,jYLocation)) {
+                    if(mineBoard[p.x][p.y]) count++;
                 }
-                if (jXLocation + 1 < this.row) {
-                    if (jYLocation - 1 >= 0 && this.mineBoard[jXLocation + 1][jYLocation - 1]) count++;
-                    if (this.mineBoard[jXLocation + 1][jYLocation]) count++;
-                    if (jYLocation + 1 < this.col && this.mineBoard[jXLocation + 1][jYLocation + 1]) count++;
-                }
-                if (jYLocation - 1 >= 0 && this.mineBoard[jXLocation][jYLocation - 1]) count++ ;
-                if (jYLocation + 1 < this.col && this.mineBoard[jXLocation][jYLocation + 1]) count++;
-                
                 infoBoard[jXLocation][jYLocation] = count;
             }
         }   
