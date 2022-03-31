@@ -1,15 +1,27 @@
+# Minesweeper
+
+> this is a project
+
+
+### File System
+
+```
 Minesweeper
-
-> this is a project
-
-> this is a test, do not panic
-
-hello project!
-
-bye!
-> this is a project
-
-hhhhhhhhhhhhh
-hhhhhhhhhhhh
-qlqlqlqllqlqllqlqllqlqlllqlqllqllql
-
+├───README.md
+├───options.txt
+├───src
+|   ├───Minesweeper.java
+|   ├───Game.java
+|   ├───
+|   ├───
+|   ├───
+|   └───
+├───resources
+|   ├───xp
+|   ├───win7
+|   └───customized
+└───language
+    ├───En.txt
+    ├───Fr.txt
+    └───Zh.txt
+```

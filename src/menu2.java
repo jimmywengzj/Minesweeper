@@ -12,7 +12,7 @@ public class menu2 extends JFrame implements ActionListener{
     ResourceBundle op=ResourceBundle.getBundle("options");
     String l=op.getString("lang");
     ResourceBundle lang=ResourceBundle.getBundle("changelanguage/changelanguage_"+l);
-    
+
     public menu2(){
         f=new JFrame();
         mb=new JMenuBar();
@@ -68,21 +68,21 @@ public class menu2 extends JFrame implements ActionListener{
     //Locale en=Locale.ENGLISH;
     
     
-
     public  void actionPerformed(ActionEvent e) {
         if(e.getSource()==newgame){
-            
-        }
-        if(e.getSource()==restart){
 
         }
+        if(e.getSource() == restartGame){
+
+        }
+
         if(e.getSource()==beginner){
 
         }
-        if(e.getSource()==intermediate){
+        if(e.getSource() == intermediate){
 
         }
-        if(e.getSource()==expert){
+        if(e.getSource() == expert){
 
         }
         if(e.getSource()==custom){
