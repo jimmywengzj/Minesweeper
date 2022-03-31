@@ -1,60 +1,62 @@
 package src;
 import javax.swing.*; 
 import java.awt.event.*; 
-import  java.util.Locale;
 import  java.util.ResourceBundle;
 
 public class menu2 extends JFrame implements ActionListener{
     
     JFrame f;
     JMenuBar mb; 
-    JMenu Game, option,language;
-    JMenuItem New,restart,Beginner, intermediate, expert, Custom,中文,Français, English;
-
+    JMenu game, option,language;
+    JMenuItem newgame,restart,beginner, intermediate, expert, custom,cn,fr,en;
+    ResourceBundle op=ResourceBundle.getBundle("options");
+    String l=op.getString("lang");
+    ResourceBundle lang=ResourceBundle.getBundle("changelanguage/changelanguage_"+l);
+    
     public menu2(){
         f=new JFrame();
         mb=new JMenuBar();
         
         //加入次级菜单
-        New=new JMenuItem("New");
-        restart=new JMenuItem("Restart");
+        newgame=new JMenuItem(lang.getString("NEW"));
+        restart=new JMenuItem(lang.getString("RESTART"));
         
-        Beginner=new JMenuItem("Beginner");
-        intermediate=new JMenuItem("Intermediate");
-        expert=new JMenuItem("Expert");
-        Custom=new JMenuItem("Custom Board");
-        中文=new JMenuItem("中文");
-        Français=new JMenuItem("Français");
-        English=new JMenuItem("English");
+        beginner=new JMenuItem(lang.getString("BEGINNER"));
+        intermediate=new JMenuItem(lang.getString("INTERMEDIATE"));
+        expert=new JMenuItem(lang.getString("EXPERT"));
+        custom=new JMenuItem(lang.getString("CUSTOM"));
+        cn=new JMenuItem("中文");
+        fr=new JMenuItem("Français");
+        en=new JMenuItem("English");
 
-        New.addActionListener(this);
+        newgame.addActionListener(this);
         restart.addActionListener(this);
-        Beginner.addActionListener(this);
+        beginner.addActionListener(this);
         intermediate.addActionListener(this);
         expert.addActionListener(this);
-        Custom.addActionListener(this);
-        中文.addActionListener(this);
-        Français.addActionListener(this);
-        English.addActionListener(this);
+        custom.addActionListener(this);
+        cn.addActionListener(this);
+        fr.addActionListener(this);
+        en.addActionListener(this);
 
         //加入菜单
-        Game=new JMenu("Game");
-        option=new JMenu("Option");
-        language=new JMenu("Language");
+        game=new JMenu(lang.getString("GAME"));
+        option=new JMenu(lang.getString("OPTION"));
+        language=new JMenu(lang.getString("LANGUAGE"));
         language.addActionListener(this);
-        Game.addActionListener(this);
+        game.addActionListener(this);
         option.addActionListener(this);
 
         //将次级菜单加入Game
-        Game.add(New);Game.add(restart);
-        Game.addSeparator();       //分割线
-        Game.add(Beginner);Game.add(intermediate);Game.add(expert);Game.add(Custom);
+        game.add(newgame);game.add(restart);
+        game.addSeparator();       //分割线
+        game.add(beginner);game.add(intermediate);game.add(expert);game.add(custom);
 
         //将次级菜单加入option
-        language.add(中文); language.add(Français); language.add(English);
+        language.add(cn); language.add(fr); language.add(en);
         option.add(language);
 
-        mb.add(Game);mb.add(option);      //将两个菜单加入菜单栏
+        mb.add(game);mb.add(option);      //将两个菜单加入菜单栏
         f.add(mb);                        //在窗口中加入menu
         
         f.setJMenuBar(mb);  
@@ -64,17 +66,17 @@ public class menu2 extends JFrame implements ActionListener{
     
     //Locale cn=Locale.CHINA;
     //Locale en=Locale.ENGLISH;
-    private static String G="";
+    
     
 
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==New){
-
+    public  void actionPerformed(ActionEvent e) {
+        if(e.getSource()==newgame){
+            
         }
         if(e.getSource()==restart){
 
         }
-        if(e.getSource()==Beginner){
+        if(e.getSource()==beginner){
 
         }
         if(e.getSource()==intermediate){
@@ -83,32 +85,44 @@ public class menu2 extends JFrame implements ActionListener{
         if(e.getSource()==expert){
 
         }
-        if(e.getSource()==Custom){
+        if(e.getSource()==custom){
 
         }
-        if(e.getSource()==language){
-            if(e.getSource()==中文){
+        
+        if(e.getSource()==cn){
+            Language.change("Zh");
+            updatename();
 
-            }
-            if(e.getSource()==Français){
-                
-                
-            }
-            if(e.getSource()==English){
-                
-            }
         }
+        if(e.getSource()==fr){
+            Language.change("Fr");
+            updatename();
+        }
+        if(e.getSource()==en){
+            Language.change("En");
+            updatename();
+                
+        }
+        
     
     } 
     
-    
-    public static String getPathfr(){
-        ResourceBundle rb=ResourceBundle.getBundle("resources/changelanguage_fr");
-        G=rb.getString("Game");
-        return G;
+    //读取文件
+    public void updatename(){
+        game.setText(Language.GAME);
+        newgame.setText(Language.NEW);    
+        option.setText(Language.OPTION);
+        restart.setText(Language.RESTART);
+        beginner.setText(Language.BEGINNER);
+        intermediate.setText(Language.INTERMEDIATE);
+        expert.setText(Language.EXPERT);
+        custom.setText(Language.CUSTOM);
+        language.setText(Language.LANGUAGE);
+
+
+        
     }
+
+
 }
-
-
-
 //Game.addSeparator(); //分割线
