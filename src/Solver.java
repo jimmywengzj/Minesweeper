@@ -14,6 +14,14 @@ public class Solver {
     public static final int MINE = 1;
     public static final int SAFE = -1;
 
+    // Hint category
+    public static final int WRONG_FLAG = 0;
+    public static final int BASIC_MINE = 1;
+    public static final int BASIC_SAFE = 2;
+    public static final int LOGIC_MINE = 3;
+    public static final int LOGIC_SAFE = 4;
+    public static final int PROBABILITY = 5;
+
     // Connected components
     public static final int CC_VISITED = -1; // for visited number cell while searching for CC
     public static final int CC_UNKNOWN = 0;
@@ -94,6 +102,8 @@ public class Solver {
      * @return null if we can't decide, else return a Pair of lists, key = list of safe cells, value = list of cells to be flagged
      */
     public static Pair<List<Point>, List<Point>> subtractionAnalysis(Game game, int x1, int y1, int x2, int y2) {
+        if (!game.inRange(x1, y1)) return null;
+        if (!game.inRange(x2, y2)) return null;
         int num1 = game.getPlayerBoard(x1, y1);
         int num2 = game.getPlayerBoard(x2, y2);
         if (num1 > 8 || num2 > 8 || num1 == 0 || num2 == 0) return null;
@@ -434,4 +444,58 @@ public class Solver {
         return res;
     }
 
+    public static Pair<Integer, Point> getHint(Game game, ProbResult probResult) {
+        if (game.status != Game.STATUS_STARTED) return null;
+
+        // the AI can make wrong decisions if there are wrong flags placed by the player, so we have to check it before we run the AI
+        Point wrongFlag = game.checkWrongFlag();
+        if (wrongFlag != null) {
+            return new Pair<Integer, Point> (WRONG_FLAG, wrongFlag);
+        }
+
+        // basis analysis
+        for (int x = 0; x < game.row; x++) {
+            for (int y = 0; y < game.col; y++) {
+                int t = basicAnalysis(game, x, y);
+                int hintType = 0;
+                if (t == UNKNOWN) continue;
+                if (t == MINE) hintType = BASIC_MINE;
+                if (t == SAFE) hintType = BASIC_SAFE;
+                return new Pair<Integer, Point> (hintType, new Point(x, y));
+            }
+        }
+
+        // substraction analysis
+        for (int x = 0; x < game.row; x++) {
+            for (int y = 0; y < game.col; y++) {
+                Pair<List<Point>, List<Point>> res = null;
+                res = subtractionAnalysis(game, x, y, x + 1, y);
+                if (res == null) res = subtractionAnalysis(game, x, y, x, y + 1);
+                if (res == null) continue;
+                // have safe cells
+                if (res.getKey() != null) {
+                    return new Pair<Integer, Point> (LOGIC_SAFE, res.getKey().get(0));
+                }
+                if (res.getValue() != null) {
+                    return new Pair<Integer, Point> (LOGIC_MINE, res.getValue().get(0));
+                }
+            }
+        }
+
+        // probability analysis
+        probResult = probabilityAnalysis(game);
+        double[][] probGraph = probResult.probGraph;
+        for (int x = 0; x < game.row; x++) {
+            for (int y = 0; y < game.col; y++) {
+                if (probGraph[x][y] == 0) {
+                    if (game.getPlayerBoard(x, y) == Game.UNCHECKED || game.getPlayerBoard(x, y) == Game.QUESTION) {
+                        return new Pair<Integer, Point> (LOGIC_SAFE, new Point(x, y));
+                    }
+                }
+            }
+        }
+
+        // no safe cells left
+        return new Pair<Integer, Point> (PROBABILITY, null);
+    }
 }
