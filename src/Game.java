@@ -179,6 +179,16 @@ public class Game {
         return this.playerBoard[x][y];
     }
 
+    public int[][] getPlayerBoard() {
+        return this.playerBoard;
+    }
+
+    public int getCoveredCellsLeft() {
+        return this.numCoveredCellsLeft;
+    }
+
+
+
     /**
      * get a list of surrounding cells (8 cells if not on the edge of the board)
      * @param x
