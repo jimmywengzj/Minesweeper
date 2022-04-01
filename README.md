@@ -3,6 +3,9 @@
 > this is a project
 
 
+
+The Mario skin is made by Jonathan Aldrich from Minesweeper X
+
 ### File System
 
 ```
