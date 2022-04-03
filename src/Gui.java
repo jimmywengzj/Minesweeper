@@ -126,6 +126,17 @@ public class Gui{
         mainPanel.add(edge_top);
         mainPanel.add(edge_middle);
         mainPanel.add(edge_bottom);
+
+        // init buttons
+        cell = new JButton[Options.row][Options.col];
+        int cellWidth = getImageWidth("covered.png");
+        int cellHeight = getImageHeight("covered.png");
+        for (int i = 0; i < Options.row; i++) {
+            for (int j = 0; j < Options.col; j++) {
+                cell[i][j] = setJButtonImage("covered.png", x1 + cellWidth * j, y3 + cellHeight * i, 1, 1);
+                mainPanel.add(cell[i][j]);
+            }
+        }
     }
 
     /***

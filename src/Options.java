@@ -13,7 +13,7 @@ public class Options{
     public static int row;
     public static int col;
     public static int nbBomb;
-    public static String resource = "minecraft";
+    public static String resource = "xp";
     public static int scale = 1;
     public static String path="MINESWEEPER/options.properties";
 
