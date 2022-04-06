@@ -5,8 +5,9 @@ import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.awt.event.*;
 
-public class Gui{
+public class Gui {
 
     public static final int STATUS_BAR_BORDER_SIZE = 4;
 
@@ -187,4 +188,66 @@ public class Gui{
     public static void gameInit(){
 
     }
+
+    
+        
+    Container grid = new Container();
+    int numMines;
+    int cellSize = 20;
+    Game game = new Game();
+
+    public Gui(int x, int y, int numMines) {
+        this.numMines = numMines;
+        int width = y * cellSize;
+        int height = x * cellSize;
+        frame.setSize(width, height);
+        frame.setLayout(null);
+        
+
+
+        JButton[][] buttons = new JButton[x][y];
+        grid.setLayout(new GridLayout(x,y));
+        for(int i = 0; i < buttons.length; i++) {
+            for(int j = 0; j < buttons[0].length; j++) {
+                buttons[i][j] = new JButton();
+                //buttons[i][j].addActionListener(this);
+                //final int finalI = i;
+                //final int finalJ = j;
+                buttons[i][j].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        if(SwingUtilities.isRightMouseButton(e)) {
+                            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
+                                game.playerBoard[i][j] = Game.FLAG;
+                                buttons[i][j] = setJButtonImage("flag", i, j, 1, 1);
+
+                                // update image
+                            } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
+                                game.playerBoard[i][j] = Game.QUESTION;
+                                buttons[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
+                            } else if(game.playerBoard[i][j] == Game.QUESTION) { // if righ click on question mark
+                                game.playerBoard[i][j] = Game.UNCHECKED;
+                                buttons[i][j] = setJButtonImage("covered", i, j, 1, 1);
+                            } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+                                for(Point p : game.getSurroundingCells(i,j)) {
+                                    if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                                        buttons[p.x][p.y] = setJButtonImage("pressed", x, y, 1, 1);
+                                    }
+                                }
+
+                            }
+                        } else if(SwingUtilities.isLeftMouseButton(e)) {
+                            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
+                                game.revealCell(i, j);
+                                
+                            } 
+                        }
+                    }
+                });
+                grid.add(buttons[x][y]);
+            }
+        }
+    }
+    
+    
 }
