@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.awt.event.*;
 
-public class Gui {
+public class Gui implements MouseListener {
 
     public static final int STATUS_BAR_BORDER_SIZE = 4;
 
@@ -44,7 +44,7 @@ public class Gui {
     }
 
     // every coordinates in this method are the coordinates in gui scale 1 (except for the init of the panels). The scaling is done while creating each element
-    public static void boardInit(){
+    public static void boardInit() {
 
         int x1 = getImageWidth("corner_top_left.png");
         int x2 = x1 + getImageWidth("0.png") * Options.col;
@@ -186,7 +186,7 @@ public class Gui {
     }
 
     public static void gameInit(){
-
+        
     }
 
     
@@ -195,14 +195,10 @@ public class Gui {
     int numMines;
     int cellSize = 20;
     Game game = new Game();
-
+    JButton[][] buttons;
     public Gui(int x, int y, int numMines) {
         this.numMines = numMines;
-        int width = y * cellSize;
-        int height = x * cellSize;
-        frame.setSize(width, height);
-        frame.setLayout(null);
-        
+
 
 
         JButton[][] buttons = new JButton[x][y];
@@ -210,43 +206,90 @@ public class Gui {
         for(int i = 0; i < buttons.length; i++) {
             for(int j = 0; j < buttons[0].length; j++) {
                 buttons[i][j] = new JButton();
-                //buttons[i][j].addActionListener(this);
+                buttons[i][j].addMouseListener(this);
+                buttons[i][j] = setJButtonImage("covered", i, j, 1, 1);
                 //final int finalI = i;
                 //final int finalJ = j;
-                buttons[i][j].addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if(SwingUtilities.isRightMouseButton(e)) {
-                            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
-                                game.playerBoard[i][j] = Game.FLAG;
-                                buttons[i][j] = setJButtonImage("flag", i, j, 1, 1);
-
-                                // update image
-                            } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
-                                game.playerBoard[i][j] = Game.QUESTION;
-                                buttons[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
-                            } else if(game.playerBoard[i][j] == Game.QUESTION) { // if righ click on question mark
-                                game.playerBoard[i][j] = Game.UNCHECKED;
-                                buttons[i][j] = setJButtonImage("covered", i, j, 1, 1);
-                            } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
-                                for(Point p : game.getSurroundingCells(i,j)) {
-                                    if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                                        buttons[p.x][p.y] = setJButtonImage("pressed", x, y, 1, 1);
-                                    }
-                                }
-
-                            }
-                        } else if(SwingUtilities.isLeftMouseButton(e)) {
-                            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
-                                game.revealCell(i, j);
-                                
-                            } 
-                        }
-                    }
-                });
+                
                 grid.add(buttons[x][y]);
             }
         }
+
+        frame.add(grid);
+        frame.setVisible(true);
+    }
+
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if(SwingUtilities.isRightMouseButton(e)) {
+            for(int i = 0; i < buttons.length; i++) {
+                for(int j = 0; j < buttons[0].length; j++) {
+                    if(e.getSource() == buttons[i][j]) {
+                        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
+                            game.playerBoard[i][j] = Game.FLAG;
+                            buttons[i][j] = setJButtonImage("flag", i, j, 1, 1);
+
+                        // update image
+                        } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
+                            game.playerBoard[i][j] = Game.QUESTION;
+                            buttons[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
+                        } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
+                            game.playerBoard[i][j] = Game.UNCHECKED;
+                            buttons[i][j] = setJButtonImage("covered", i, j, 1, 1);
+                        } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+                            for(Point p : game.getSurroundingCells(i,j)) {
+                                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                                    buttons[p.x][p.y] = setJButtonImage("0", i, j, 1, 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        } else if(SwingUtilities.isLeftMouseButton(e)) {
+            for(int i = 0; i < buttons.length; i++) {
+                for(int j = 0; j < buttons[0].length; j++) {
+                    if(e.getSource() == buttons[i][j]) {
+                        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
+                            game.revealCell(i, j);
+                
+                        } 
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        for(int i = 0; i < buttons.length; i++) {
+            for(int j = 0; j < buttons[0].length; j++) {
+                if(e.getSource() == buttons[i][j]) {
+                    for(Point p : game.getSurroundingCells(i,j)) {
+                        if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                            buttons[p.x][p.y] = setJButtonImage("covered", i, j, 1, 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
     }
     
     
