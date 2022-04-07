@@ -8,7 +8,7 @@ import java.io.*;
 import java.awt.event.*;
 
 public class Gui implements MouseListener {
-
+    
     public static final int STATUS_BAR_BORDER_SIZE = 4;
 
     public static JFrame frame;
@@ -24,6 +24,8 @@ public class Gui implements MouseListener {
     public static JLabel message;
 
     public static JButton[][] cell;
+    
+    public static Game game;
 
     public static void init() {
         frame = new JFrame();
@@ -186,61 +188,33 @@ public class Gui implements MouseListener {
     }
 
     public static void gameInit(){
-        
+        game = new Game();
     }
 
     
-        
-    Container grid = new Container();
-    int numMines;
-    int cellSize = 20;
-    Game game = new Game();
-    JButton[][] buttons;
-    public Gui(int x, int y, int numMines) {
-        this.numMines = numMines;
-
-
-
-        JButton[][] buttons = new JButton[x][y];
-        grid.setLayout(new GridLayout(x,y));
-        for(int i = 0; i < buttons.length; i++) {
-            for(int j = 0; j < buttons[0].length; j++) {
-                buttons[i][j] = new JButton();
-                buttons[i][j].addMouseListener(this);
-                buttons[i][j] = setJButtonImage("covered", i, j, 1, 1);
-                //final int finalI = i;
-                //final int finalJ = j;
-                
-                grid.add(buttons[x][y]);
-            }
-        }
-
-        frame.add(grid);
-        frame.setVisible(true);
-    }
 
 
     @Override
     public void mousePressed(MouseEvent e) {
         if(SwingUtilities.isRightMouseButton(e)) {
-            for(int i = 0; i < buttons.length; i++) {
-                for(int j = 0; j < buttons[0].length; j++) {
-                    if(e.getSource() == buttons[i][j]) {
+            for(int i = 0; i < cell.length; i++) {
+                for(int j = 0; j < cell[0].length; j++) {
+                    if(e.getSource() == cell[i][j]) {
                         if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
                             game.playerBoard[i][j] = Game.FLAG;
-                            buttons[i][j] = setJButtonImage("flag", i, j, 1, 1);
+                            cell[i][j] = setJButtonImage("flag", i, j, 1, 1);
 
                         // update image
                         } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
                             game.playerBoard[i][j] = Game.QUESTION;
-                            buttons[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
+                            cell[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
                         } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
                             game.playerBoard[i][j] = Game.UNCHECKED;
-                            buttons[i][j] = setJButtonImage("covered", i, j, 1, 1);
+                            cell[i][j] = setJButtonImage("covered", i, j, 1, 1);
                         } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
                             for(Point p : game.getSurroundingCells(i,j)) {
                                 if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                                    buttons[p.x][p.y] = setJButtonImage("0", i, j, 1, 1);
+                                    cell[p.x][p.y] = setJButtonImage("0", i, j, 1, 1);
                                 }
                             }
                         }
@@ -249,9 +223,9 @@ public class Gui implements MouseListener {
             }
             
         } else if(SwingUtilities.isLeftMouseButton(e)) {
-            for(int i = 0; i < buttons.length; i++) {
-                for(int j = 0; j < buttons[0].length; j++) {
-                    if(e.getSource() == buttons[i][j]) {
+            for(int i = 0; i < cell.length; i++) {
+                for(int j = 0; j < cell[0].length; j++) {
+                    if(e.getSource() == cell[i][j]) {
                         if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
                             game.revealCell(i, j);
                 
@@ -264,12 +238,12 @@ public class Gui implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        for(int i = 0; i < buttons.length; i++) {
-            for(int j = 0; j < buttons[0].length; j++) {
-                if(e.getSource() == buttons[i][j]) {
+        for(int i = 0; i < cell.length; i++) {
+            for(int j = 0; j < cell[0].length; j++) {
+                if(e.getSource() == cell[i][j]) {
                     for(Point p : game.getSurroundingCells(i,j)) {
                         if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                            buttons[p.x][p.y] = setJButtonImage("covered", i, j, 1, 1);
+                            cell[p.x][p.y] = setJButtonImage("covered", i, j, 1, 1);
                         }
                     }
                 }
