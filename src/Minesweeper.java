@@ -10,9 +10,10 @@ import java.util.List;
 public class Minesweeper {
     
     public static void main(String[] args) {
-        //new menu2();
         Options.loadOptions();
-        Gui.init();
+        new menu2();
+        System.out.println(Language.GAME);
+        //Gui.init();
     }
    
     
