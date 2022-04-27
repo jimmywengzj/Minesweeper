@@ -5,9 +5,10 @@ import  java.util.ResourceBundle;
 
 public class menu2 extends JFrame implements ActionListener{
     
-    JFrame f;
+    static JFrame f;
     JMenuBar mb; 
-    JMenu game, option,language;
+    JMenu game, option,language; 
+    static JMenu resource;
     JMenuItem newgame,restart,beginner, intermediate, expert, custom,cn,fr,en;
     ResourceBundle op=ResourceBundle.getBundle("options");
     public static String l;
@@ -30,6 +31,7 @@ public class menu2 extends JFrame implements ActionListener{
         cn=new JMenuItem("中文");
         fr=new JMenuItem("Français");
         en=new JMenuItem("English");
+        
 
         newgame.addActionListener(this);
         restart.addActionListener(this);
@@ -45,9 +47,14 @@ public class menu2 extends JFrame implements ActionListener{
         game=new JMenu();
         option=new JMenu();
         language=new JMenu();
+        resource = new JMenu();
         language.addActionListener(this);
         game.addActionListener(this);
         option.addActionListener(this);
+        resource.addActionListener(this);
+        
+        Resources.getFilesNames();//程序在src文件运行，所以要返回到上一级文件
+   
 
         updatename();
 
@@ -58,7 +65,7 @@ public class menu2 extends JFrame implements ActionListener{
 
         //将次级菜单加入option
         language.add(cn); language.add(fr); language.add(en);
-        option.add(language);
+        option.add(language);option.add(resource);
 
         mb.add(game);mb.add(option);      //将两个菜单加入菜单栏
         f.add(mb);                        //在窗口中加入menu
@@ -109,8 +116,7 @@ public class menu2 extends JFrame implements ActionListener{
             l="En";
             Language.change(l);
             updatename();
-            
-                
+
         }
         
     
@@ -127,9 +133,10 @@ public class menu2 extends JFrame implements ActionListener{
         expert.setText(Language.EXPERT);
         custom.setText(Language.CUSTOM);
         language.setText(Language.LANGUAGE);
+        resource.setText(Language.RESOURCE);
        
     }
 
 
 }
-//Game.addSeparator(); //分割线
+
