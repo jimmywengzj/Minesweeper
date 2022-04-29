@@ -8,6 +8,7 @@ import java.util.List;
 public class Game {
 
     // game status 
+    public static final int STATUS_NOT_STARTED = -2;
     public static final int STATUS_STARTED  = 0;
     public static final int STATUS_WON      = 1;
     public static final int STATUS_LOST     = -1;
@@ -45,7 +46,21 @@ public class Game {
     protected int numCoveredCellsLeft;  // cells including unchecked, flag, and question.
     protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
+    public Game () {
+        status = STATUS_NOT_STARTED;
+        this.col = Options.col;
+        this.row = Options.row;
+        this.numMines = Options.nbBomb;
+        this.gameRule = GAME_RULE_WIN_XP; // assign this value for now
+        this.playerBoard = new int[this.row][this.col];
+        for(int i = 0; i < this.row; i++) {
+            for(int j = 0; j < this.col; j++) {
+                playerBoard[i][j] = UNCHECKED;
+            }
+        }
+        this.infoBoard = new int[this.row][this.col];
 
+    }
 
 
 
@@ -126,7 +141,7 @@ public class Game {
             int jYLocation = j % this.col; 
 
             if(mineBoard[jXLocation][jYLocation]) {
-                infoBoard[jXLocation][jYLocation] = -1; // -1 if there is mine
+                infoBoard[jXLocation][jYLocation] = MINE; 
             } else {
                 // add value to each cell the number of nearby mines
                 
@@ -155,16 +170,18 @@ public class Game {
      * @return true if not mine
      * 
      */
-    public boolean revealCell(int x, int y) {
+    public boolean revealCell(int x, int y, HashSet<Point> revealedCells) {
         if(mineBoard[x][y]) {
             return false;
         }
         playerBoard[x][y] = infoBoard[x][y];
         this.numCoveredCellsLeft --;
-
+        revealedCells.add(new Point(x,y));
         if(playerBoard[x][y] == 0) {
             for(Point p : getSurroundingCells(x, y)) {
-                revealCell(p.x, p.y);
+                if(!revealedCells.contains(p) && playerBoard[p.x][p.y] == UNCHECKED) {
+                    revealCell(p.x, p.y, revealedCells);
+                }
             }
         }
         return true;
@@ -211,7 +228,7 @@ public class Game {
         for (int i = x - 1; i <= x + 1; i++) {
             for (int j = y - 1; j <= y + 1; j++) {
                 if (i != x || j != y) {
-                    if (inRange(x, y)) {
+                    if (inRange(i, j)) {
                         surroundingCells.add(new Point(i, j));
                     }
                 }
@@ -230,3 +247,4 @@ public class Game {
         return x >= 0 && x < this.row && y >= 0 && y < this.col;
     }
 }
+

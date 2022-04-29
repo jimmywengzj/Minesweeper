@@ -13,7 +13,7 @@ public class Minesweeper {
         Options.loadOptions();
         new menu2();
         System.out.println(Language.GAME);
-        //Gui.init();
+        Gui.init();
         //Resources.getFilesNames("..\\Minesweeper\\resources");//程序在src文件运行，所以要返回到上一级文件
     }
    
