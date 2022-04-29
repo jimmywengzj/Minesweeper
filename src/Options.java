@@ -13,9 +13,11 @@ public class Options{
     public static int row;
     public static int col;
     public static int nbBomb;
-    public static String resource = "minecraft";
+    public static String resource = "xp";
     public static int scale = 1;
     public static String path="MINESWEEPER/options.properties";
+    public static String lang="";
+    
 
     //read properties file
     public static void loadOptions(){
@@ -23,7 +25,9 @@ public class Options{
         row=Integer.parseInt(rb.getString("row"));
         col=Integer.parseInt(rb.getString("col"));
         nbBomb=Integer.parseInt(rb.getString("nbbomb"));
-        
+        resource=rb.getString("resource");
+        lang=rb.getString("lang");
+        Language.change(lang);
     }
     
     //write properties file
@@ -36,7 +40,8 @@ public class Options{
             properties.setProperty("row", String.valueOf(row));
             properties.setProperty("col", String.valueOf(col));
             properties.setProperty("nbBomb", String.valueOf(nbBomb));
-            
+            properties.setProperty("lang", lang);
+            //properties.setProperty("resource", );
 
             properties.store(outputStream, "new options");
         }catch(IOException e){

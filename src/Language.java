@@ -16,20 +16,15 @@ public class Language {
 
     public static void change(String source){
         
-        if(source == "Fr"){
-            //read "changeLANGUAGE_fr.properties" and change the LANGUAGE
-            ResourceBundle rb=ResourceBundle.getBundle("changelanguage/changelanguage_fr");
-            changename(rb);
         
-        }else if(source == "Zh"){
-            ResourceBundle rb=ResourceBundle.getBundle("changelanguage/changelanguage_zh");
-            changename(rb);
+            //read "changeLANGUAGE_fr.properties" and change the LANGUAGE
+        ResourceBundle rb=ResourceBundle.getBundle("language/"+source);
+        changename(rb);
+        Options.lang=source;
+        
+        
 
-        }else if(source == "En"){
-            ResourceBundle rb=ResourceBundle.getBundle("changelanguage/changelanguage_en");
-            changename(rb);
-
-        }
+        
     }
 
     public static void changename(ResourceBundle rb){

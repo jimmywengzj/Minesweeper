@@ -5,29 +5,33 @@ import  java.util.ResourceBundle;
 
 public class menu2 extends JFrame implements ActionListener{
     
-    JFrame f;
+    static JFrame f;
     JMenuBar mb; 
-    JMenu game, option,language;
+    JMenu game, option,language; 
+    static JMenu resource;
     JMenuItem newgame,restart,beginner, intermediate, expert, custom,cn,fr,en;
     ResourceBundle op=ResourceBundle.getBundle("options");
-    String l=op.getString("lang");
-    ResourceBundle lang=ResourceBundle.getBundle("changelanguage/changelanguage_"+l);
+    public static String l;
+    //String l=op.getString("lang");
+    //ResourceBundle lang=ResourceBundle.getBundle("changelanguage/changelanguage_"+l);
 
     public menu2(){
         f=new JFrame();
         mb=new JMenuBar();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         //加入次级菜单
-        newgame=new JMenuItem(lang.getString("NEW"));
-        restart=new JMenuItem(lang.getString("RESTART"));
+        newgame=new JMenuItem();
+        restart=new JMenuItem();
         
-        beginner=new JMenuItem(lang.getString("BEGINNER"));
-        intermediate=new JMenuItem(lang.getString("INTERMEDIATE"));
-        expert=new JMenuItem(lang.getString("EXPERT"));
-        custom=new JMenuItem(lang.getString("CUSTOM"));
+        beginner=new JMenuItem();
+        intermediate=new JMenuItem();
+        expert=new JMenuItem();
+        custom=new JMenuItem();
         cn=new JMenuItem("中文");
         fr=new JMenuItem("Français");
         en=new JMenuItem("English");
+        
 
         newgame.addActionListener(this);
         restart.addActionListener(this);
@@ -40,12 +44,19 @@ public class menu2 extends JFrame implements ActionListener{
         en.addActionListener(this);
 
         //加入菜单
-        game=new JMenu(lang.getString("GAME"));
-        option=new JMenu(lang.getString("OPTION"));
-        language=new JMenu(lang.getString("LANGUAGE"));
+        game=new JMenu();
+        option=new JMenu();
+        language=new JMenu();
+        resource = new JMenu();
         language.addActionListener(this);
         game.addActionListener(this);
         option.addActionListener(this);
+        resource.addActionListener(this);
+        
+        Resources.getFilesNames();//程序在src文件运行，所以要返回到上一级文件
+   
+
+        updatename();
 
         //将次级菜单加入Game
         game.add(newgame);game.add(restart);
@@ -54,7 +65,7 @@ public class menu2 extends JFrame implements ActionListener{
 
         //将次级菜单加入option
         language.add(cn); language.add(fr); language.add(en);
-        option.add(language);
+        option.add(language);option.add(resource);
 
         mb.add(game);mb.add(option);      //将两个菜单加入菜单栏
         f.add(mb);                        //在窗口中加入menu
@@ -90,18 +101,22 @@ public class menu2 extends JFrame implements ActionListener{
         }
         
         if(e.getSource()==cn){
-            Language.change("Zh");
+            l="Zh";
+            Language.change(l);
             updatename();
+            
 
         }
         if(e.getSource()==fr){
             Language.change("Fr");
             updatename();
+            
         }
         if(e.getSource()==en){
-            Language.change("En");
+            l="En";
+            Language.change(l);
             updatename();
-                
+
         }
         
     
@@ -118,11 +133,10 @@ public class menu2 extends JFrame implements ActionListener{
         expert.setText(Language.EXPERT);
         custom.setText(Language.CUSTOM);
         language.setText(Language.LANGUAGE);
-
-
-        
+        resource.setText(Language.RESOURCE);
+       
     }
 
 
 }
-//Game.addSeparator(); //分割线
+
