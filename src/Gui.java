@@ -130,18 +130,58 @@ public class Gui implements MouseListener {
         mainPanel.add(edge_middle);
         mainPanel.add(edge_bottom);
 
-        // init buttons
+
         cell = new JButton[Options.row][Options.col];
         int cellWidth = getImageWidth("covered.png");
         int cellHeight = getImageHeight("covered.png");
         for (int i = 0; i < Options.row; i++) {
             for (int j = 0; j < Options.col; j++) {
+                
                 cell[i][j] = setJButtonImage("covered.png", x1 + cellWidth * j, y3 + cellHeight * i, 1, 1);
+                cell[i][j].addMouseListener(new MouseAdapter() { 
+                    public void actionPerformed(MouseEvent e) { 
+                        if(SwingUtilities.isRightMouseButton(e)) {
+                            rightClick(i,j);
+                        } else if(SwingUtilities.isLeftMouseButton(e)) {
+                            leftClick(i,j);
+                        }
+
+                    };
+                    
+                } );
+
                 mainPanel.add(cell[i][j]);
+            }
+        }
+
+    }
+
+    public static void rightClick(int i, int j) {
+        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
+            game.playerBoard[i][j] = Game.FLAG;
+            cell[i][j] = setJButtonImage("flag", i, j, 1, 1);
+
+        // update image
+        } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
+            game.playerBoard[i][j] = Game.QUESTION;
+            cell[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
+        } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
+            game.playerBoard[i][j] = Game.UNCHECKED;
+            cell[i][j] = setJButtonImage("covered", i, j, 1, 1);
+        } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+            for(Point p : game.getSurroundingCells(i,j)) {
+                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                    cell[p.x][p.y] = setJButtonImage("0", i, j, 1, 1);
+                }
             }
         }
     }
 
+    public static void leftClick(int i, int j) {
+        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
+            game.revealCell(i, j);
+        } 
+    }
     /***
      * get image height by its file name
      * @param fileName
