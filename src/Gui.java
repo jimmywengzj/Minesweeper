@@ -1,15 +1,23 @@
 package src;
 
-import javax.swing.*; 
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.awt.event.*;
+import java.util.*;
 
-public class Gui implements MouseListener {
+public class Gui {
     
     public static final int STATUS_BAR_BORDER_SIZE = 4;
+
+    public static boolean leftPressed = false;
+    public static boolean leftExited = false;
+    public static boolean facePressed = false;
+    public static boolean faceExited = false;
 
     public static JFrame frame;
     public static JMenuBar menuBar;
@@ -96,7 +104,29 @@ public class Gui implements MouseListener {
         statusBar.add(timer_ones);
         statusBar.add(timer_background);
 
+        
         face = setJButtonImage("face_Smiley.png", (x2 - x1 - getImageWidth("face_Smiley.png")) / 2, STATUS_BAR_BORDER_SIZE, 1, 1);
+        face.addMouseListener(new MouseAdapter() {
+
+            public void mousePressed(MouseEvent e) {
+                if(SwingUtilities.isLeftMouseButton(e)) {
+                    facePress();
+                }
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                if(SwingUtilities.isLeftMouseButton(e)) {
+                    faceRelease();
+                }
+            }
+
+            public void mouseExited(MouseEvent e) {
+                if(SwingUtilities.isLeftMouseButton(e)) {
+                    faceExit();
+                }
+            }
+        });
+
         statusBar.add(face);
 
         mainPanel.add(statusBar);
@@ -130,25 +160,60 @@ public class Gui implements MouseListener {
         mainPanel.add(edge_middle);
         mainPanel.add(edge_bottom);
 
-
         cell = new JButton[Options.row][Options.col];
         int cellWidth = getImageWidth("covered.png");
         int cellHeight = getImageHeight("covered.png");
         for (int i = 0; i < Options.row; i++) {
             for (int j = 0; j < Options.col; j++) {
-                
                 cell[i][j] = setJButtonImage("covered.png", x1 + cellWidth * j, y3 + cellHeight * i, 1, 1);
+                cell[i][j] = setJButtonImage("covered.png", x1 + cellWidth * j, y3 + cellHeight * i, 1, 1);
+                final int i2 = i;
+                final int j2 = j;
                 cell[i][j].addMouseListener(new MouseAdapter() { 
-                    public void actionPerformed(MouseEvent e) { 
+                    public void mousePressed(MouseEvent e) { 
                         if(SwingUtilities.isRightMouseButton(e)) {
-                            rightClick(i,j);
+                            System.out.println("alright");
+                            rightPress(i2,j2);
                         } else if(SwingUtilities.isLeftMouseButton(e)) {
-                            leftClick(i,j);
+                            System.out.println("hey you");
+                            leftPress(i2,j2);
                         }
-
                     };
-                    
                 } );
+
+                cell[i][j].addMouseListener(new MouseAdapter() {
+                    public void mouseExited(MouseEvent e) {
+                        if(SwingUtilities.isRightMouseButton(e)) {
+                            System.out.println("alright I'm out");
+                            rightExit(i2,j2);
+                        }
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            leftExit(i2,j2);
+                        }
+                    }
+                } );
+
+                cell[i][j].addMouseListener(new MouseAdapter() {
+                    public void mouseReleased(MouseEvent e) {
+                        if(SwingUtilities.isRightMouseButton(e)) {
+                            rightRelease(i2,j2);
+                        }
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            leftRelease(i2,j2);
+                        }
+                    }
+                });
+                
+                cell[i][j].addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        if(SwingUtilities.isRightMouseButton(e)) {
+                            rightClick(i2,j2);
+                        }
+                        if(SwingUtilities.isLeftMouseButton(e)) {
+                            leftClick(i2,j2);
+                        }
+                    }
+                });
 
                 mainPanel.add(cell[i][j]);
             }
@@ -156,32 +221,166 @@ public class Gui implements MouseListener {
 
     }
 
-    public static void rightClick(int i, int j) {
-        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
-            game.playerBoard[i][j] = Game.FLAG;
-            cell[i][j] = setJButtonImage("flag", i, j, 1, 1);
+    public static void facePress() {
+        facePressed = true;
+    }
 
-        // update image
-        } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
-            game.playerBoard[i][j] = Game.QUESTION;
-            cell[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
-        } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
-            game.playerBoard[i][j] = Game.UNCHECKED;
-            cell[i][j] = setJButtonImage("covered", i, j, 1, 1);
-        } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+    public static void faceRelease() {
+        if(facePressed && !faceExited) {
+            changeFaceImage("faceSmiley");
+            frame.remove(mainPanel);
+                    
+            menuInit();
+            boardInit();
+            gameInit();
+            frame.setJMenuBar(menuBar);  
+            frame.add(mainPanel);
+            frame.pack();
+            frame.setLocation(100, 100);
+            frame.setResizable(false);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+            frame.revalidate();
+        }
+
+        facePressed = false;
+        faceExited = false;
+    }
+
+    public static void faceExit() {
+        faceExited = true;
+    }
+
+    public static void rightExit(int i, int j) {
+        if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) {
             for(Point p : game.getSurroundingCells(i,j)) {
                 if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                    cell[p.x][p.y] = setJButtonImage("0", i, j, 1, 1);
+                    changeJButtonImage(cell[p.x][p.y], Game.UNCHECKED);
                 }
             }
         }
     }
 
-    public static void leftClick(int i, int j) {
-        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
-            game.revealCell(i, j);
-        } 
+    public static void rightRelease(int i, int j) {
+        if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) {
+            for(Point p : game.getSurroundingCells(i,j)) {
+                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                    changeJButtonImage(cell[p.x][p.y], Game.UNCHECKED);
+                }
+            }
+        }
     }
+
+    public static void rightPress(int i, int j) {
+        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
+            game.playerBoard[i][j] = Game.FLAG;
+            changeJButtonImage(cell[i][j], Game.FLAG);
+            game.numMinesLeft --;
+        
+        // update image
+        } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
+            game.playerBoard[i][j] = Game.QUESTION;
+            changeJButtonImage(cell[i][j], Game.QUESTION);
+            game.numCoveredCellsLeft ++;
+        } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
+            game.playerBoard[i][j] = Game.UNCHECKED;
+            changeJButtonImage(cell[i][j], Game.UNCHECKED);
+        } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+            for(Point p : game.getSurroundingCells(i,j)) {
+                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                    changeJButtonImage(cell[p.x][p.y], 0);
+                }
+            }
+        }
+    }
+
+    public static void rightClick(int i, int j) {
+
+    }
+
+
+    public static void leftExit(int i, int j) {
+        if(game.playerBoard[i][j] == Game.UNCHECKED && leftPressed) {
+            changeJButtonImage(cell[i][j], Game.UNCHECKED);
+        }
+        
+        leftExited = true;
+    }
+
+    public static void leftPress(int i, int j) {
+        if(game.status == Game.STATUS_LOST) {
+            changeFaceImage("faceSad");
+        } else {
+            changeFaceImage("faceCurious");
+        }
+        
+
+        if(game.playerBoard[i][j] == Game.UNCHECKED && game.status == Game.STATUS_STARTED) {
+            changeJButtonImage(cell[i][j], 0);
+        }
+        
+        leftPressed = true;
+    }
+
+    public static void leftRelease(int i, int j) {
+        changeFaceImage("faceSmiley");
+        
+        if(game.playerBoard[i][j] == Game.UNCHECKED && !leftExited && leftPressed) { // if left click on unchecked block
+            
+            HashSet<Point> revealedCells = new HashSet<Point>();
+            if(game.status == Game.STATUS_NOT_STARTED) {
+                game.status = Game.STATUS_STARTED;
+                game.initBoard(i, j);
+                System.out.println("yes");
+            }
+            if(game.status == Game.STATUS_STARTED) {
+                if(game.revealCell(i, j, revealedCells)) {
+                    for(Point p : revealedCells) {
+                        int info = game.getPlayerBoard(p.x, p.y);
+                        changeJButtonImage(cell[p.x][p.y], info);
+                        System.out.println(p.x + " " + p.y);
+                    }
+                } else {
+                    
+                    changeFaceImage("faceSad");
+                    game.status = Game.STATUS_LOST;
+                    for(int m = 0; m < game.row; m++) {
+                        for(int n = 0; n < game.col; n++) {
+                            switch(game.playerBoard[m][n]) {
+                                case Game.FLAG: 
+
+                                    if(game.infoBoard[m][n] != Game.MINE) {
+                                        changeJButtonImage(cell[m][n], Game.WRONG_FLAG);
+                                    } 
+                                    break;
+                                
+                                default:
+                                    break;
+                            }
+                            switch(game.infoBoard[m][n]) {
+                                case Game.MINE:
+                                    changeJButtonImage(cell[m][n], Game.MINE);
+                            }
+                        }
+                    }
+                    changeJButtonImage(cell[i][j], Game.WRONG_MINE);
+                }
+            } 
+
+            if(game.numMinesLeft == 0) {
+
+            }
+
+        } 
+        
+        leftExited = false;
+    }
+
+    public static void leftClick(int i, int j) {
+        
+        
+    }
+    
     /***
      * get image height by its file name
      * @param fileName
@@ -238,16 +437,67 @@ public class Gui implements MouseListener {
         return jButton;
     }
 
+    public static void changeJButtonImage(JButton jButton, int n) {
+        String fileName;
+        switch (n) {
+            case 1002:  fileName = "covered.png";
+                        break;
+            case 1003:  fileName = "flag.png";
+                        break;
+            case 1004:  fileName = "questionMark.png";
+                        break;
+            case 1005:  fileName = "bomb.png";
+                        break;
+            case 1007:  fileName = "exploded.png";
+                        break;         
+            case 1008:  fileName = "wrongGuess.png";
+                        break;
+            default:    fileName = Integer.toString(n) + ".png";
+                        break;
+        }
+        ImageIcon icon = new ImageIcon("resources/" + Options.resource + "/" + fileName);
+        int width = icon.getIconWidth() * Options.scale;
+        int height = icon.getIconHeight() * Options.scale;
+        Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        jButton.setIcon(new ImageIcon(scaledImage));
+        //jButton = new JButton(new ImageIcon(scaledImage));
+        //jButton.setBounds(x * Options.scale, y * Options.scale, width, height);
+        
+    }
+
+    public static void changeFaceImage(String faceType) {
+        String fileName;
+        switch (faceType) {
+            case "faceCool":    fileName = "face_Cool.png";
+                                break;
+            case "faceCurious": fileName = "face_Curious.png";
+                                break;
+            case "faceSad":     fileName = "face_Sad.png";
+                                break;
+            case "faceSmiley":  fileName = "face_Smiley.png";
+                                break;
+            default:            fileName = "faceSmiley";
+                                break;
+        }
+        ImageIcon icon = new ImageIcon("resources/" + Options.resource + "/" + fileName);
+        int width = icon.getIconWidth() * Options.scale;
+        int height = icon.getIconHeight() * Options.scale;
+        Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        face.setIcon(new ImageIcon(scaledImage));
+
+        
+    }
+
     public static void gameInit(){
         game = new Game();
     }
 
     
 
-
+    /*
     @Override
     public void mousePressed(MouseEvent e) {
-        if(SwingUtilities.isRightMouseButton(e)) {
+        /* if(SwingUtilities.isRightMouseButton(e)) {
             for(int i = 0; i < cell.length; i++) {
                 for(int j = 0; j < cell[0].length; j++) {
                     if(e.getSource() == cell[i][j]) {
@@ -271,35 +521,36 @@ public class Gui implements MouseListener {
                         }
                     }
                 }
-            }
+            } */
             
-        } else if(SwingUtilities.isLeftMouseButton(e)) {
-            for(int i = 0; i < cell.length; i++) {
+/*         } else if(SwingUtilities.isLeftMouseButton(e)) {
+                for(int i = 0; i < cell.length; i++) {
                 for(int j = 0; j < cell[0].length; j++) {
                     if(e.getSource() == cell[i][j]) {
                         if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
-                            game.revealCell(i, j);
+                            game.revealCell(i, j, );
                 
                         } 
                     }
                 }
             }
-        }
-    }
+        } */
+
+   /*  }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        for(int i = 0; i < cell.length; i++) {
+        /* for(int i = 0; i < cell.length; i++) {
             for(int j = 0; j < cell[0].length; j++) {
                 if(e.getSource() == cell[i][j]) {
                     for(Point p : game.getSurroundingCells(i,j)) {
+                        cell[p.x][p.y] = setJButtonImage("covered", i, j, 1, 1);
                         if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                            cell[p.x][p.y] = setJButtonImage("covered", i, j, 1, 1);
                         }
                     }
                 }
             }
-        }
+        } 
     }
     
     @Override
@@ -315,7 +566,8 @@ public class Gui implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-    }
+    } 
+    */
     
     
 }

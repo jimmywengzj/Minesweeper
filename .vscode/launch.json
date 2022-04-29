@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Minesweeper",
+            "request": "launch",
+            "mainClass": "src.Minesweeper",
+            "projectName": "Minesweeper_56f3fd92"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"

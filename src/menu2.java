@@ -133,7 +133,7 @@ public class menu2 extends JFrame implements ActionListener{
         expert.setText(Language.EXPERT);
         custom.setText(Language.CUSTOM);
         language.setText(Language.LANGUAGE);
-        resource.setText(Language.RESOURCE);
+        //resource.setText(Language.RESOURCE);
        
     }
 
