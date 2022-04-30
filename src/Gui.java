@@ -172,7 +172,7 @@ public class Gui {
                 cell[i][j].addMouseListener(new MouseAdapter() { 
                     public void mousePressed(MouseEvent e) { 
                         if(SwingUtilities.isRightMouseButton(e)) {
-                            System.out.println("alright");
+                            
                             rightPress(i2,j2);
                         } else if(SwingUtilities.isLeftMouseButton(e)) {
                             System.out.println("hey you");
@@ -184,7 +184,7 @@ public class Gui {
                 cell[i][j].addMouseListener(new MouseAdapter() {
                     public void mouseExited(MouseEvent e) {
                         if(SwingUtilities.isRightMouseButton(e)) {
-                            System.out.println("alright I'm out");
+                            
                             rightExit(i2,j2);
                         }
                         if(SwingUtilities.isLeftMouseButton(e)) {
@@ -331,7 +331,6 @@ public class Gui {
             changeFaceImage("faceCurious");
         }
         
-
         if(game.playerBoard[i][j] == Game.UNCHECKED && (game.status == Game.STATUS_STARTED)) {
             changeJButtonImage(cell[i][j], 0);
         }

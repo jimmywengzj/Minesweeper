@@ -45,6 +45,7 @@ public class Game {
     protected int[][] infoBoard, playerBoard, lastPlayerBoard;    // infoBoard containing all information, player's perspective see line 21
     protected int numCoveredCellsLeft;  // cells including unchecked, flag, and question.
     protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
+    protected long startTime;
 
     public Game () {
         status = STATUS_NOT_STARTED;
@@ -162,7 +163,8 @@ public class Game {
                 
                 infoBoard[jXLocation][jYLocation] = count;
             }
-        }   
+        } 
+
     }
     
     /**
@@ -176,6 +178,7 @@ public class Game {
         if(mineBoard[x][y]) {
             return false;
         }
+        if(playerBoard[x][y] == infoBoard[x][y]) return true;
         playerBoard[x][y] = infoBoard[x][y];
         this.numCoveredCellsLeft --;
         revealedCells.add(new Point(x,y));
