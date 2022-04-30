@@ -262,36 +262,53 @@ public class Gui {
     }
 
     public static void rightRelease(int i, int j) {
-        if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) {
+        if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0 && game.status == Game.STATUS_STARTED) {
+            int numFlags = 0;
             for(Point p : game.getSurroundingCells(i,j)) {
-                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                    changeJButtonImage(cell[p.x][p.y], Game.UNCHECKED);
+                if(game.playerBoard[p.x][p.y] == Game.FLAG) numFlags++;
+            }
+
+            if(numFlags == game.playerBoard[i][j]) {
+                for(Point p : game.getSurroundingCells(i,j)) {
+                    if(game.playerBoard[p.x][p.y] == Game.FLAG || game.playerBoard[p.x][p.y] != Game.QUESTION) {
+                        leftPress(p.x, p.y);
+                        leftRelease(p.x, p.y);
+                    }
                 }
+            } else {
+                for(Point p : game.getSurroundingCells(i,j)) {
+                    if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                        changeJButtonImage(cell[p.x][p.y], Game.UNCHECKED);
+                    } 
+                }       
             }
         }
     }
 
     public static void rightPress(int i, int j) {
-        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
-            game.playerBoard[i][j] = Game.FLAG;
-            changeJButtonImage(cell[i][j], Game.FLAG);
-            game.numMinesLeft --;
-        
-        // update image
-        } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
-            game.playerBoard[i][j] = Game.QUESTION;
-            changeJButtonImage(cell[i][j], Game.QUESTION);
-            game.numCoveredCellsLeft ++;
-        } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
-            game.playerBoard[i][j] = Game.UNCHECKED;
-            changeJButtonImage(cell[i][j], Game.UNCHECKED);
-        } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
-            for(Point p : game.getSurroundingCells(i,j)) {
-                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                    changeJButtonImage(cell[p.x][p.y], 0);
+        if(game.status == Game.STATUS_STARTED) {
+            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
+                game.playerBoard[i][j] = Game.FLAG;
+                changeJButtonImage(cell[i][j], Game.FLAG);
+                game.numMinesLeft --;
+            
+            // update image
+            } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
+                game.playerBoard[i][j] = Game.QUESTION;
+                changeJButtonImage(cell[i][j], Game.QUESTION);
+                game.numCoveredCellsLeft ++;
+            } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
+                game.playerBoard[i][j] = Game.UNCHECKED;
+                changeJButtonImage(cell[i][j], Game.UNCHECKED);
+            } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+                for(Point p : game.getSurroundingCells(i,j)) {
+                    if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
+                        changeJButtonImage(cell[p.x][p.y], 0);
+                    }
                 }
             }
         }
+        
     }
 
     public static void rightClick(int i, int j) {
@@ -323,7 +340,9 @@ public class Gui {
     }
 
     public static void leftRelease(int i, int j) {
-        changeFaceImage("faceSmiley");
+        if(game.status == Game.STATUS_STARTED || game.status == Game.STATUS_NOT_STARTED) {
+            changeFaceImage("faceSmiley");
+        }
         
         if(game.playerBoard[i][j] == Game.UNCHECKED && !leftExited && leftPressed) { // if left click on unchecked block
             
