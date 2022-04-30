@@ -327,12 +327,12 @@ public class Gui {
     public static void leftPress(int i, int j) {
         if(game.status == Game.STATUS_LOST) {
             changeFaceImage("faceSad");
-        } else {
+        } else if(game.status != Game.STATUS_WON) {
             changeFaceImage("faceCurious");
         }
         
 
-        if(game.playerBoard[i][j] == Game.UNCHECKED && game.status == Game.STATUS_STARTED) {
+        if(game.playerBoard[i][j] == Game.UNCHECKED && (game.status == Game.STATUS_STARTED)) {
             changeJButtonImage(cell[i][j], 0);
         }
         
@@ -359,6 +359,20 @@ public class Gui {
                         changeJButtonImage(cell[p.x][p.y], info);
                         System.out.println(p.x + " " + p.y);
                     }
+                    
+                    if(game.numCoveredCellsLeft == game.numMines) {
+                        game.status = Game.STATUS_WON;
+                        changeFaceImage("faceCool");
+                        for(int m = 0; m < game.row; m++) {
+                            for(int n = 0; n < game.col; n++) {
+                                if(game.playerBoard[m][n] == Game.UNCHECKED) {
+                                    changeJButtonImage(cell[m][n], Game.FLAG);
+                                }
+                            }
+                        }
+
+                    }
+
                 } else {
                     
                     changeFaceImage("faceSad");
@@ -386,9 +400,6 @@ public class Gui {
                 }
             } 
 
-            if(game.numMinesLeft == 0) {
-
-            }
 
         } 
         

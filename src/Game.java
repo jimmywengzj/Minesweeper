@@ -98,6 +98,7 @@ public class Game {
             mineBoard[this.row - 1][this.col - 1] = mineBoard[x][y];
             mineBoard[x][y] = false;
             numMinesLeft = numMines;
+            numCoveredCellsLeft = this.row * this.col;
             // avoid placing mine on (x,y), which means excluding the position
             // iterate numMines times to randomly place mine
             
@@ -133,6 +134,7 @@ public class Game {
             mineBoard[this.row - 1][this.col - 1] = mineBoard[x][y];
             mineBoard[x][y] = false;
             numMinesLeft = numMines;
+            numCoveredCellsLeft = this.row * this.col;
         }
             // not knowing what to do with the last scenario...
         for(int j = 0; j < this.row * this.col; j++) {
