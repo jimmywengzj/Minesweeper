@@ -176,6 +176,7 @@ public class Game {
         if(mineBoard[x][y]) {
             return false;
         }
+        if (playerBoard[x][y] == infoBoard[x][y]) return false;
         playerBoard[x][y] = infoBoard[x][y];
         this.numCoveredCellsLeft --;
         revealedCells.add(new Point(x,y));
