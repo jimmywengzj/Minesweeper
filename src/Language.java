@@ -1,5 +1,4 @@
 package src;
-import java.util.Properties;
 import  java.util.ResourceBundle;
 
 public class Language {
