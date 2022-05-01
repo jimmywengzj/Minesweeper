@@ -1,7 +1,6 @@
 package src;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -49,7 +48,12 @@ public class Gui {
         frame.setTitle("Minesweeper");
         frame.setLocation(100, 100);
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                Options.writeOptions();
+                System.exit(0);
+            }
+        });
         frame.setVisible(true);
     }
 
