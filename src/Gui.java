@@ -109,7 +109,60 @@ public class Gui {
             }
         });
 
-        //custom.addActionListener(this);
+        custom.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                JFrame customFrame = new JFrame();
+
+                JPanel customMainPanel = new JPanel();
+                customMainPanel.setLayout(null);
+                customMainPanel.setPreferredSize(new Dimension(230, 200));
+                JLabel customrow = new JLabel();
+                customrow.setText("row");
+                customrow.setBounds(20, 20, 100, 20);
+                JTextField customRow = new JTextField();
+                customRow.setBounds(150, 20, 40, 20);
+                JLabel customcol = new JLabel();
+                customcol.setText("column");
+                customcol.setBounds(20, 60, 100, 20);
+                JTextField customCol = new JTextField();
+                customCol.setBounds(150, 60, 40, 20);
+                JLabel customnbBomb = new JLabel();
+                customnbBomb.setText("bomb number");
+                customnbBomb.setBounds(20, 100, 100, 20);
+                JTextField customNbBomb = new JTextField();
+                customNbBomb.setBounds(150, 100, 40, 20);
+                JButton ok = new JButton("OK");
+                ok.setBounds(110, 140, 80, 20);
+                JButton cancel = new JButton("Cancel");
+                cancel.setBounds(20, 140, 80, 20);
+
+                customMainPanel.add(cancel);
+                customMainPanel.add(ok);
+                customMainPanel.add(customnbBomb);
+                customMainPanel.add(customcol);
+                customMainPanel.add(customrow);
+                customMainPanel.add(customRow);
+                customMainPanel.add(customCol);
+                customMainPanel.add(customNbBomb);
+                customFrame.add(customMainPanel);
+
+                customFrame.pack();
+                customFrame.setTitle("custom");
+                customFrame.setLocation(100, 100);
+                //customFrame.setSize(100,100);
+                customFrame.setResizable(false);
+                //customFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                customFrame.setVisible(true);
+
+                String NbRow = customRow.getText();
+                String NbCol = customCol.getText();
+                String NbBomb = customNbBomb.getText();
+                Options.row = Integer. parseInt(NbRow);
+                Options.col = Integer. parseInt(NbCol);
+                Options.col = Integer. parseInt(NbBomb);
+                reInitPanel();
+            }
+        });
 
         cn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
