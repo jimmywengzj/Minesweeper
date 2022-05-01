@@ -1,5 +1,4 @@
 package src;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,15 +13,13 @@ public class Options{
     public static int scale;
     public static String lang = "";
 
-    public static String path = "MINESWEEPER/options.properties";
-    
     //read properties file
     public static void loadOptions(){
         ResourceBundle rb = ResourceBundle.getBundle("options");
 
         row = Integer.parseInt(rb.getString("row"));
         col = Integer.parseInt(rb.getString("col"));
-        nbBomb = Integer.parseInt(rb.getString("nbbomb"));
+        nbBomb = Integer.parseInt(rb.getString("nbBomb"));
         resource = rb.getString("resource");
         scale = Integer.parseInt(rb.getString("scale"));
         lang = rb.getString("lang");
@@ -30,9 +27,9 @@ public class Options{
     }
     
     //write properties file
-    public static void writeOptions() throws FileNotFoundException, IOException{
+    public static void writeOptions(){
         try(
-            OutputStream outputStream = new FileOutputStream(path);
+            OutputStream outputStream = new FileOutputStream("options.properties");
         ){
             Properties properties = new Properties();
 
@@ -43,7 +40,7 @@ public class Options{
             properties.setProperty("scale", String.valueOf(scale));
             properties.setProperty("lang", lang);
 
-            properties.store(outputStream, "new options");
+            properties.store(outputStream, "Game options");
         }catch(IOException e){
             e.printStackTrace();
         }

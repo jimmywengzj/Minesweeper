@@ -1,7 +1,6 @@
 package src;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -49,7 +48,12 @@ public class Gui {
         frame.setTitle("Minesweeper");
         frame.setLocation(100, 100);
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                Options.writeOptions();
+                System.exit(0);
+            }
+        });
         frame.setVisible(true);
     }
 
@@ -289,20 +293,18 @@ public class Gui {
 
         
         face = setJButtonImage("face_Smiley.png", (x2 - x1 - getImageWidth("face_Smiley.png")) / 2, STATUS_BAR_BORDER_SIZE, 1, 1);
+        face.setBorder(null);
         face.addMouseListener(new MouseAdapter() {
-
             public void mousePressed(MouseEvent e) {
                 if(SwingUtilities.isLeftMouseButton(e)) {
                     facePress();
                 }
             }
-
             public void mouseReleased(MouseEvent e) {
                 if(SwingUtilities.isLeftMouseButton(e)) {
                     faceRelease();
                 }
             }
-
             public void mouseExited(MouseEvent e) {
                 if(SwingUtilities.isLeftMouseButton(e)) {
                     faceExit();
@@ -349,7 +351,7 @@ public class Gui {
         for (int i = 0; i < Options.row; i++) {
             for (int j = 0; j < Options.col; j++) {
                 cell[i][j] = setJButtonImage("covered.png", x1 + cellWidth * j, y3 + cellHeight * i, 1, 1);
-                cell[i][j] = setJButtonImage("covered.png", x1 + cellWidth * j, y3 + cellHeight * i, 1, 1);
+                cell[i][j].setBorder(null);
                 final int i2 = i;
                 final int j2 = j;
                 cell[i][j].addMouseListener(new MouseAdapter() { 
