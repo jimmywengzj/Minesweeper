@@ -20,8 +20,11 @@ public class Gui {
     public static boolean faceExited = false;
 
     public static JFrame frame;
+
     public static JMenuBar menuBar;
-    
+    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu;
+    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en;
+
     public static JPanel mainPanel;
     public static JLabel corner_top_left, corner_top_right, corner_middle_left, corner_middle_right, corner_bottom_left, corner_bottom_right,
                          edge_upper_left, edge_upper_right, edge_lower_left, edge_lower_right, edge_top, edge_middle, edge_bottom;
@@ -43,14 +46,141 @@ public class Gui {
         frame.setJMenuBar(menuBar);  
         frame.add(mainPanel);
         frame.pack();
+        frame.setTitle("Minesweeper");
         frame.setLocation(100, 100);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
+    public static void reInitPanel() {
+        frame.remove(mainPanel);
+        boardInit();
+        gameInit();
+        frame.add(mainPanel);
+        frame.pack();
+        frame.revalidate();
+    }
+
     public static void menuInit(){
         menuBar = new JMenuBar();
+        //加入次级菜单
+        newgame = new JMenuItem();
+        restart = new JMenuItem();
+        
+        beginner = new JMenuItem();
+        intermediate = new JMenuItem();
+        expert = new JMenuItem();
+        custom = new JMenuItem();
+        cn = new JMenuItem("中文");
+        fr = new JMenuItem("Français");
+        en = new JMenuItem("English");
+        
+        newgame.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                reInitPanel();
+            }
+        });
+
+        //restart.addActionListener(this);
+
+        beginner.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.row = 9;
+                Options.col = 9;
+                Options.nbBomb = 10;
+                reInitPanel();
+            }
+        });
+        intermediate.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.row = 16;
+                Options.col = 16;
+                Options.nbBomb = 40;
+                reInitPanel();
+            }
+        });
+        expert.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.row = 16;
+                Options.col = 30;
+                Options.nbBomb = 99;
+                reInitPanel();
+            }
+        });
+
+        //custom.addActionListener(this);
+
+        cn.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Language.setLanguage("Zh");
+                updateMenuLanguage();
+            }
+        });
+        fr.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Language.setLanguage("Fr");
+                updateMenuLanguage();
+            }
+        });
+        en.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Language.setLanguage("En");
+                updateMenuLanguage();
+            }
+        });
+
+        //加入菜单
+        gameMenu = new JMenu();
+        optionMenu = new JMenu();
+        languageMenu = new JMenu();
+        resourceMenu = new JMenu();
+        
+        //创建File对象
+        File resourcesFolder = new File("../Minesweeper/resources");
+        //获取该目录下的所有文件
+        if(resourcesFolder != null){
+            String[] resourcePacks = resourcesFolder.list();
+
+            if(resourcePacks != null){
+                for(final String resourceName: resourcePacks){
+                    JMenuItem a = new JMenuItem(resourceName);
+                    a.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e){
+                            Options.resource = resourceName;
+                            reInitPanel();
+                        }
+                    });
+                    resourceMenu.add(a);
+                }
+            }
+        }
+
+        updateMenuLanguage();
+
+        //将次级菜单加入Game
+        gameMenu.add(newgame); gameMenu.add(restart);
+        gameMenu.addSeparator();       //分割线
+        gameMenu.add(beginner); gameMenu.add(intermediate); gameMenu.add(expert); gameMenu.add(custom);
+
+        //将次级菜单加入option
+        languageMenu.add(cn); languageMenu.add(fr); languageMenu.add(en);
+        optionMenu.add(languageMenu); optionMenu.add(resourceMenu);
+
+        menuBar.add(gameMenu); menuBar.add(optionMenu);      //将两个菜单加入菜单栏
+    }
+
+    public static void updateMenuLanguage(){
+        gameMenu.setText(Language.GAME);
+        newgame.setText(Language.NEW);    
+        optionMenu.setText(Language.OPTION);
+        restart.setText(Language.RESTART);
+        beginner.setText(Language.BEGINNER);
+        intermediate.setText(Language.INTERMEDIATE);
+        expert.setText(Language.EXPERT);
+        custom.setText(Language.CUSTOM);
+        languageMenu.setText(Language.LANGUAGE);
+        resourceMenu.setText(Language.RESOURCE);
     }
 
     // every coordinates in this method are the coordinates in gui scale 1 (except for the init of the panels). The scaling is done while creating each element
@@ -179,9 +309,7 @@ public class Gui {
                             leftPress(i2,j2);
                         }
                     };
-                } );
 
-                cell[i][j].addMouseListener(new MouseAdapter() {
                     public void mouseExited(MouseEvent e) {
                         if(SwingUtilities.isRightMouseButton(e)) {
                             System.out.println("alright I'm out");
@@ -191,9 +319,7 @@ public class Gui {
                             leftExit(i2,j2);
                         }
                     }
-                } );
 
-                cell[i][j].addMouseListener(new MouseAdapter() {
                     public void mouseReleased(MouseEvent e) {
                         if(SwingUtilities.isRightMouseButton(e)) {
                             rightRelease(i2,j2);
@@ -202,9 +328,7 @@ public class Gui {
                             leftRelease(i2,j2);
                         }
                     }
-                });
-                
-                cell[i][j].addMouseListener(new MouseAdapter() {
+
                     public void mouseClicked(MouseEvent e) {
                         if(SwingUtilities.isRightMouseButton(e)) {
                             rightClick(i2,j2);
@@ -228,19 +352,7 @@ public class Gui {
     public static void faceRelease() {
         if(facePressed && !faceExited) {
             changeFaceImage("faceSmiley");
-            frame.remove(mainPanel);
-                    
-            menuInit();
-            boardInit();
-            gameInit();
-            frame.setJMenuBar(menuBar);  
-            frame.add(mainPanel);
-            frame.pack();
-            frame.setLocation(100, 100);
-            frame.setResizable(false);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
-            frame.revalidate();
+            reInitPanel();
         }
 
         facePressed = false;
@@ -408,7 +520,6 @@ public class Gui {
 
     public static void leftClick(int i, int j) {
         
-        
     }
     
     /***
@@ -490,9 +601,6 @@ public class Gui {
         int height = icon.getIconHeight() * Options.scale;
         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
         jButton.setIcon(new ImageIcon(scaledImage));
-        //jButton = new JButton(new ImageIcon(scaledImage));
-        //jButton.setBounds(x * Options.scale, y * Options.scale, width, height);
-        
     }
 
     public static void changeFaceImage(String faceType) {
@@ -514,15 +622,11 @@ public class Gui {
         int height = icon.getIconHeight() * Options.scale;
         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
         face.setIcon(new ImageIcon(scaledImage));
-
-        
     }
 
     public static void gameInit(){
         game = new Game();
     }
-
-    
 
     /*
     @Override

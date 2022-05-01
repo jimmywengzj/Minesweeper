@@ -13,31 +13,25 @@ public class Language {
     public static String EXPERT="";
     public static String CUSTOM="";
     public static String LANGUAGE="";
+    public static String RESOURCE="";
 
-    public static void change(String source){
-        
-        
-            //read "changeLANGUAGE_fr.properties" and change the LANGUAGE
-        ResourceBundle rb=ResourceBundle.getBundle("language/"+source);
-        changename(rb);
-        Options.lang=source;
-        
-        
-
-        
+    public static void setLanguage(String source){
+        // read "changeLANGUAGE_fr.properties" and change the LANGUAGE
+        ResourceBundle rb = ResourceBundle.getBundle("language/" + source);
+        Options.lang = source;
+        updateLanguage(rb);
     }
 
-    public static void changename(ResourceBundle rb){
-        GAME=rb.getString("GAME");
-        OPTION=rb.getString("OPTION");
-        NEW=rb.getString("NEW");
-        RESTART=rb.getString("RESTART");
-        BEGINNER=rb.getString("BEGINNER");
-        INTERMEDIATE=rb.getString("INTERMEDIATE");
-        EXPERT=rb.getString("EXPERT");
-        CUSTOM=rb.getString("CUSTOM");
-        LANGUAGE=rb.getString("LANGUAGE");
+    public static void updateLanguage(ResourceBundle rb){
+        GAME = rb.getString("GAME");
+        OPTION = rb.getString("OPTION");
+        NEW = rb.getString("NEW");
+        RESTART = rb.getString("RESTART");
+        BEGINNER = rb.getString("BEGINNER");
+        INTERMEDIATE = rb.getString("INTERMEDIATE");
+        EXPERT = rb.getString("EXPERT");
+        CUSTOM = rb.getString("CUSTOM");
+        LANGUAGE = rb.getString("LANGUAGE");
+        RESOURCE = rb.getString("RESOURCE");
     }
-
-    
 }
