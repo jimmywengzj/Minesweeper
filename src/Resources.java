@@ -28,7 +28,7 @@ public class Resources extends menu2 {
 						}
 					});
 
-					resource.add(new JMenuItem(resourceName));
+					//resourceMenu.add(new JMenuItem(resourceName));
 
 				}
 			}else{
