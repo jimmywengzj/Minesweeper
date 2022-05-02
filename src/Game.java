@@ -36,12 +36,11 @@ public class Game {
     
     // variables in game
     protected int status;                                 
-    protected int row, col, numMines, step;  
+    protected int row, col, numMines;  
     protected int gameRule;
-    protected boolean isCheatEnabled, showMine;
     protected boolean[][] mineBoard;  // true if there's mine
     protected boolean[] mineBoard1D;
-    protected int[][] infoBoard, playerBoard, lastPlayerBoard;    // infoBoard containing all information, player's perspective see line 21
+    protected int[][] infoBoard, playerBoard;    // infoBoard containing all information, player's perspective see line 21
     protected int numCoveredCellsLeft;  // cells including unchecked, flag, and question.
     protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
