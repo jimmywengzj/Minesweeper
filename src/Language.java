@@ -28,6 +28,12 @@ public class Language {
     public static String GUI_SCALE1="";
     public static String GUI_SCALE2="";
     public static String GUI_SCALE3="";
+    public static String WIDTH="";
+    public static String HEIGHT="";
+    public static String MINES="";
+    public static String OK="";
+    public static String CANCEL="";
+    public static String CUSTOM_TITLE="";
 
     public static void setLanguage(String source){
         // read "changeLANGUAGE_fr.properties" and change the LANGUAGE
@@ -62,5 +68,11 @@ public class Language {
         GUI_SCALE1 = rb.getString("GUI_SCALE1");
         GUI_SCALE2 = rb.getString("GUI_SCALE2");
         GUI_SCALE3 = rb.getString("GUI_SCALE3");
+        WIDTH = rb.getString("WIDTH");
+        HEIGHT = rb.getString("HEIGHT");
+        MINES = rb.getString("MINES");
+        OK = rb.getString("OK");
+        CANCEL = rb.getString("CANCEL");
+        CUSTOM_TITLE = rb.getString("CUSTOM_TITLE");
     }
 }
