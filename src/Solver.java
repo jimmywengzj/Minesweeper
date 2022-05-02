@@ -444,7 +444,7 @@ public class Solver {
         return res;
     }
 
-    public static Pair<Integer, Point> getHint(Game game, ProbResult probResult) {
+    public static Pair<Integer, Point> getHint(Game game, Integer prob[][]) {
         if (game.status != Game.STATUS_STARTED) return null;
 
         // the AI can make wrong decisions if there are wrong flags placed by the player, so we have to check it before we run the AI
@@ -473,18 +473,19 @@ public class Solver {
                 if (res == null) res = subtractionAnalysis(game, x, y, x, y + 1);
                 if (res == null) continue;
                 // have safe cells
-                if (res.getKey() != null) {
+                if (res.getKey().size() > 0) {
                     return new Pair<Integer, Point> (LOGIC_SAFE, res.getKey().get(0));
                 }
-                if (res.getValue() != null) {
+                if (res.getValue().size() > 0) {
                     return new Pair<Integer, Point> (LOGIC_MINE, res.getValue().get(0));
                 }
             }
         }
 
         // probability analysis
-        probResult = probabilityAnalysis(game);
-        double[][] probGraph = probResult.probGraph;
+        //probResult = probabilityAnalysis(game);
+        //double[][] probGraph = probResult.probGraph;
+        double[][] probGraph = probabilityAnalysis(game).probGraph;
         for (int x = 0; x < game.row; x++) {
             for (int y = 0; y < game.col; y++) {
                 if (probGraph[x][y] == 0) {
@@ -492,10 +493,10 @@ public class Solver {
                         return new Pair<Integer, Point> (LOGIC_SAFE, new Point(x, y));
                     }
                 }
+                prob[x][y] = (int) Math.round(probGraph[x][y] * 100.0);
             }
         }
-
         // no safe cells left
-        return new Pair<Integer, Point> (PROBABILITY, null);
+        return new Pair<Integer, Point> (PROBABILITY, new Point(0, 0));
     }
 }

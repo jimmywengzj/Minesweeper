@@ -15,6 +15,14 @@ public class Language {
     public static String RESOURCE="";
     public static String AI="";
     public static String HINT="";
+    public static String HINT_GAME_NOT_STARTED="";
+    public static String HINT_WRONG_FLAG="";
+    public static String HINT_BASIC_MINE="";
+    public static String HINT_BASIC_SAFE="";
+    public static String HINT_LOGIC_MINE="";
+    public static String HINT_LOGIC_SAFE="";
+    public static String HINT_PROBABILITY="";
+    public static String HINT_PROBABILITY_TITLE="";
 
     public static void setLanguage(String source){
         // read "changeLANGUAGE_fr.properties" and change the LANGUAGE
@@ -36,5 +44,13 @@ public class Language {
         RESOURCE = rb.getString("RESOURCE");
         AI = rb.getString("AI");
         HINT = rb.getString("HINT");
+        HINT_GAME_NOT_STARTED = rb.getString("HINT_GAME_NOT_STARTED");
+        HINT_WRONG_FLAG = rb.getString("HINT_WRONG_FLAG");
+        HINT_BASIC_MINE = rb.getString("HINT_BASIC_MINE");
+        HINT_BASIC_SAFE = rb.getString("HINT_BASIC_SAFE");
+        HINT_LOGIC_MINE = rb.getString("HINT_LOGIC_MINE");
+        HINT_LOGIC_SAFE = rb.getString("HINT_LOGIC_SAFE");
+        HINT_PROBABILITY = rb.getString("HINT_PROBABILITY");
+        HINT_PROBABILITY_TITLE = rb.getString("HINT_PROBABILITY_TITLE");
     }
 }

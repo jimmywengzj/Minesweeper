@@ -1,7 +1,7 @@
 package src;
 
+import src.util.*;
 import javax.swing.*;
-
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -185,6 +185,50 @@ public class Gui {
             public void actionPerformed(ActionEvent e){
                 Language.setLanguage("En");
                 updateMenuLanguage();
+            }
+        });
+
+        hint.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                if(game.status != Game.STATUS_STARTED) {
+                    JOptionPane.showMessageDialog(frame, Language.HINT_GAME_NOT_STARTED);
+                } else {
+                    Integer[][] prob = new Integer[game.row][game.col];
+                    Pair<Integer, Point> res = Solver.getHint(game, prob);
+                    int x = res.getValue().x;
+                    int y = res.getValue().y;
+                    switch (res.getKey()) {
+                        case Solver.WRONG_FLAG :    JOptionPane.showMessageDialog(frame, Language.HINT_WRONG_FLAG);
+                                                    changeJButtonImageToColor(cell[x][y], Color.GREEN);
+                                                    break;
+                        case Solver.BASIC_MINE :    JOptionPane.showMessageDialog(frame, Language.HINT_BASIC_MINE);
+                                                    setJButtonColoredBorder(cell[x][y], Color.RED);
+                                                    break;
+                        case Solver.BASIC_SAFE :    JOptionPane.showMessageDialog(frame, Language.HINT_BASIC_SAFE);
+                                                    setJButtonColoredBorder(cell[x][y], Color.GREEN);
+                                                    break;
+                        case Solver.LOGIC_MINE :    JOptionPane.showMessageDialog(frame, Language.HINT_LOGIC_MINE);
+                                                    changeJButtonImageToColor(cell[x][y], Color.RED);
+                                                    break;
+                        case Solver.LOGIC_SAFE :    JOptionPane.showMessageDialog(frame, Language.HINT_LOGIC_SAFE);
+                                                    changeJButtonImageToColor(cell[x][y], Color.GREEN);
+                                                    break;
+                        case Solver.PROBABILITY :   JOptionPane.showMessageDialog(frame, Language.HINT_PROBABILITY);
+                                                    JFrame probFrame = new JFrame(Language.HINT_PROBABILITY_TITLE);
+                                                    JTable jTable = new JTable(prob, prob[0]);
+                                                    jTable.setTableHeader(null);
+                                                    jTable.setFont(new Font("Serif", Font.PLAIN, 13));
+                                                    JScrollPane jScrollPane = new JScrollPane(jTable);
+                                                    int imageDimension = new ImageIcon("resources/" + Options.resource + "/0.png").getIconWidth();
+                                                    jScrollPane.setPreferredSize(new Dimension(imageDimension * game.col * Options.scale + 3, imageDimension * game.row * Options.scale + 3));
+                                                    probFrame.add(jScrollPane);
+                                                    probFrame.pack();
+                                                    probFrame.setLocation(400, 180);
+                                                    probFrame.setVisible(true);
+                                                    break;
+                        default : break;
+                    }
+                }
             }
         });
 
@@ -664,6 +708,35 @@ public class Gui {
         jButton.setIcon(new ImageIcon(scaledImage));
     }
 
+    public static void changeJButtonImageToColor(JButton jButton, Color c) {
+        Icon icon = jButton.getIcon();
+        
+        BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = bufferedImage.createGraphics();
+
+        graphics.setPaint(c);
+        graphics.fillRect(0, 0, icon.getIconWidth(), icon.getIconWidth());
+        graphics.dispose();
+
+        jButton.setIcon(new ImageIcon(bufferedImage));
+    }
+
+    public static void setJButtonColoredBorder(JButton jButton, Color c) {
+        Icon icon = jButton.getIcon();
+        
+        BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = bufferedImage.createGraphics();
+
+        icon.paintIcon(null, graphics, 0, 0);
+
+        graphics.setPaint(c);
+        graphics.setStroke(new BasicStroke(2 * Options.scale));
+        graphics.drawRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+        graphics.dispose();
+
+        jButton.setIcon(new ImageIcon(bufferedImage));
+    }
+
     public static void changeFaceImage(String faceType) {
         String fileName;
         switch (faceType) {
@@ -689,80 +762,4 @@ public class Gui {
         game = new Game();
     }
 
-    /*
-    @Override
-    public void mousePressed(MouseEvent e) {
-        /* if(SwingUtilities.isRightMouseButton(e)) {
-            for(int i = 0; i < cell.length; i++) {
-                for(int j = 0; j < cell[0].length; j++) {
-                    if(e.getSource() == cell[i][j]) {
-                        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
-                            game.playerBoard[i][j] = Game.FLAG;
-                            cell[i][j] = setJButtonImage("flag", i, j, 1, 1);
-
-                        // update image
-                        } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
-                            game.playerBoard[i][j] = Game.QUESTION;
-                            cell[i][j] = setJButtonImage("questiomMark", i, j, 1, 1);
-                        } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
-                            game.playerBoard[i][j] = Game.UNCHECKED;
-                            cell[i][j] = setJButtonImage("covered", i, j, 1, 1);
-                        } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
-                            for(Point p : game.getSurroundingCells(i,j)) {
-                                if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                                    cell[p.x][p.y] = setJButtonImage("0", i, j, 1, 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            } */
-            
-/*         } else if(SwingUtilities.isLeftMouseButton(e)) {
-                for(int i = 0; i < cell.length; i++) {
-                for(int j = 0; j < cell[0].length; j++) {
-                    if(e.getSource() == cell[i][j]) {
-                        if(game.playerBoard[i][j] == Game.UNCHECKED) { // if left click on unchecked block
-                            game.revealCell(i, j, );
-                
-                        } 
-                    }
-                }
-            }
-        } */
-
-   /*  }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        /* for(int i = 0; i < cell.length; i++) {
-            for(int j = 0; j < cell[0].length; j++) {
-                if(e.getSource() == cell[i][j]) {
-                    for(Point p : game.getSurroundingCells(i,j)) {
-                        cell[p.x][p.y] = setJButtonImage("covered", i, j, 1, 1);
-                        if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
-                        }
-                    }
-                }
-            }
-        } 
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    } 
-    */
-    
-    
 }
