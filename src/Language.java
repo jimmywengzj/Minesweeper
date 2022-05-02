@@ -13,6 +13,8 @@ public class Language {
     public static String CUSTOM="";
     public static String LANGUAGE="";
     public static String RESOURCE="";
+    public static String AI="";
+    public static String HINT="";
 
     public static void setLanguage(String source){
         // read "changeLANGUAGE_fr.properties" and change the LANGUAGE
@@ -32,5 +34,7 @@ public class Language {
         CUSTOM = rb.getString("CUSTOM");
         LANGUAGE = rb.getString("LANGUAGE");
         RESOURCE = rb.getString("RESOURCE");
+        AI = rb.getString("AI");
+        HINT = rb.getString("HINT");
     }
 }

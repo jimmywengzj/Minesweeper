@@ -21,8 +21,8 @@ public class Gui {
     public static JFrame frame;
 
     public static JMenuBar menuBar;
-    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu;
-    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en;
+    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu, aiMenu;
+    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en, hint;
 
     public static JPanel mainPanel;
     public static JLabel corner_top_left, corner_top_right, corner_middle_left, corner_middle_right, corner_bottom_left, corner_bottom_right,
@@ -79,6 +79,7 @@ public class Gui {
         cn = new JMenuItem("中文");
         fr = new JMenuItem("Français");
         en = new JMenuItem("English");
+        hint = new JMenuItem();
         
         newgame.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -192,6 +193,7 @@ public class Gui {
         optionMenu = new JMenu();
         languageMenu = new JMenu();
         resourceMenu = new JMenu();
+        aiMenu = new JMenu();
         
         //创建File对象
         File resourcesFolder = new File("../Minesweeper/resources");
@@ -224,7 +226,9 @@ public class Gui {
         languageMenu.add(cn); languageMenu.add(fr); languageMenu.add(en);
         optionMenu.add(languageMenu); optionMenu.add(resourceMenu);
 
-        menuBar.add(gameMenu); menuBar.add(optionMenu);      //将两个菜单加入菜单栏
+        aiMenu.add(hint);
+
+        menuBar.add(gameMenu); menuBar.add(optionMenu); menuBar.add(aiMenu);     //将菜单加入菜单栏
     }
 
     public static void updateMenuLanguage(){
@@ -238,6 +242,8 @@ public class Gui {
         custom.setText(Language.CUSTOM);
         languageMenu.setText(Language.LANGUAGE);
         resourceMenu.setText(Language.RESOURCE);
+        aiMenu.setText(Language.AI);
+        hint.setText(Language.HINT);
     }
 
     // every coordinates in this method are the coordinates in gui scale 1 (except for the init of the panels). The scaling is done while creating each element
