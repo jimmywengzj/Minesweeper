@@ -126,17 +126,17 @@ public class Gui {
                 JLabel customrow = new JLabel();
                 customrow.setText("row");
                 customrow.setBounds(20, 20, 100, 20);
-                JTextField customRow = new JTextField();
+                JTextField customRow = new JTextField(Integer.toString(Options.row));
                 customRow.setBounds(150, 20, 40, 20);
                 JLabel customcol = new JLabel();
                 customcol.setText("column");
                 customcol.setBounds(20, 60, 100, 20);
-                JTextField customCol = new JTextField();
+                JTextField customCol = new JTextField(Integer.toString(Options.col));
                 customCol.setBounds(150, 60, 40, 20);
                 JLabel customnbBomb = new JLabel();
                 customnbBomb.setText("bomb number");
                 customnbBomb.setBounds(20, 100, 100, 20);
-                JTextField customNbBomb = new JTextField();
+                JTextField customNbBomb = new JTextField(Integer.toString(Options.nbBomb));
                 customNbBomb.setBounds(150, 100, 40, 20);
                 JButton ok = new JButton("OK");
                 ok.setBounds(110, 140, 80, 20);
@@ -149,9 +149,30 @@ public class Gui {
                         String NbRow = customRow.getText();
                         String NbCol = customCol.getText();
                         String NbBomb = customNbBomb.getText();
-                        Options.row = Integer.parseInt(NbRow);
-                        Options.col = Integer.parseInt(NbCol);
-                        Options.nbBomb = Integer.parseInt(NbBomb);
+                        int r = Integer.parseInt(NbRow);
+                        int c = Integer.parseInt(NbCol);
+                        int b = Integer.parseInt(NbBomb);
+                        if (r<9){
+                            r = 9;
+                        }
+                        if (c<9){
+                            c = 9;
+                        }
+                        if (r>24){
+                            r = 24;
+                        }
+                        if (c>30){
+                            c = 30;
+                        }
+                        if (b>(int)(0.9*r*c)){
+                            b = (int)(0.9*r*c);
+                        }
+                        if (b<10){
+                            b = 10;
+                        }
+                        Options.row = r;
+                        Options.col = c;
+                        Options.nbBomb = b;
                         reInitPanel();
                     }
                 });
