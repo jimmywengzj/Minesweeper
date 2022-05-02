@@ -3,6 +3,7 @@ import  java.util.ResourceBundle;
 
 public class Language {
     //赋予初始值
+    public static String TITLE="";
     public static String GAME="";
     public static String OPTION="";
     public static String NEW="";
@@ -36,6 +37,7 @@ public class Language {
     }
 
     public static void updateLanguage(ResourceBundle rb){
+        TITLE = rb.getString("TITLE");
         GAME = rb.getString("GAME");
         OPTION = rb.getString("OPTION");
         NEW = rb.getString("NEW");

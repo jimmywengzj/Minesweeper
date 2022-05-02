@@ -45,7 +45,6 @@ public class Gui {
         frame.setJMenuBar(menuBar);  
         frame.add(mainPanel);
         frame.pack();
-        frame.setTitle("Minesweeper");
         frame.setLocation(100, 100);
         frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter() {
@@ -304,6 +303,7 @@ public class Gui {
     }
 
     public static void updateMenuLanguage(){
+        frame.setTitle(Language.TITLE);
         gameMenu.setText(Language.GAME);
         newgame.setText(Language.NEW);    
         optionMenu.setText(Language.OPTION);
