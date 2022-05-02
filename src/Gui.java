@@ -141,21 +141,21 @@ public class Gui {
                 customrow.setText("row");
                 customrow.setBounds(20, 20, 100, 20);
                 JTextField customRow = new JTextField(Integer.toString(Options.row));
-                customRow.setBounds(150, 20, 40, 20);
+                customRow.setBounds(165, 20, 40, 20);
                 JLabel customcol = new JLabel();
                 customcol.setText("column");
                 customcol.setBounds(20, 60, 100, 20);
                 JTextField customCol = new JTextField(Integer.toString(Options.col));
-                customCol.setBounds(150, 60, 40, 20);
+                customCol.setBounds(165, 60, 40, 20);
                 JLabel customnbBomb = new JLabel();
                 customnbBomb.setText("bomb number");
                 customnbBomb.setBounds(20, 100, 100, 20);
                 JTextField customNbBomb = new JTextField(Integer.toString(Options.nbBomb));
-                customNbBomb.setBounds(150, 100, 40, 20);
+                customNbBomb.setBounds(165, 100, 40, 20);
                 JButton ok = new JButton("OK");
-                ok.setBounds(110, 140, 80, 20);
+                ok.setBounds(120, 140, 85, 20);
                 JButton cancel = new JButton("Cancel");
-                cancel.setBounds(20, 140, 80, 20);
+                cancel.setBounds(20, 140, 85, 20);
 
                 ok.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
