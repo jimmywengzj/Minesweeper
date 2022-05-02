@@ -88,9 +88,23 @@ public class Gui {
                 reInitPanel();
             }
         });
-
-        //restart.addActionListener(this);
-
+        restart.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                frame.remove(mainPanel);
+                boardInit();
+                frame.add(mainPanel);
+                frame.pack();
+                frame.revalidate();
+                for(int i = 0; i < game.row; i++) {
+                    for(int j = 0; j < game.col; j++) {
+                        game.playerBoard[i][j] = Game.UNCHECKED;
+                    }
+                }
+                game.numMinesLeft = game.numMines;
+                game.numCoveredCellsLeft = game.row * game.col;
+                game.status = Game.STATUS_STARTED;
+            }
+        });
         beginner.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 Options.row = 9;
