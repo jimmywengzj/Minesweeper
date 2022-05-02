@@ -143,6 +143,24 @@ public class Gui {
                 JButton cancel = new JButton("Cancel");
                 cancel.setBounds(20, 140, 80, 20);
 
+                ok.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        customFrame.setVisible(false);
+                        String NbRow = customRow.getText();
+                        String NbCol = customCol.getText();
+                        String NbBomb = customNbBomb.getText();
+                        Options.row = Integer.parseInt(NbRow);
+                        Options.col = Integer.parseInt(NbCol);
+                        Options.nbBomb = Integer.parseInt(NbBomb);
+                        reInitPanel();
+                    }
+                });
+                cancel.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        customFrame.setVisible(false);
+                    }
+                });
+
                 customMainPanel.add(cancel);
                 customMainPanel.add(ok);
                 customMainPanel.add(customnbBomb);
@@ -161,13 +179,7 @@ public class Gui {
                 //customFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 customFrame.setVisible(true);
 
-                String NbRow = customRow.getText();
-                String NbCol = customCol.getText();
-                String NbBomb = customNbBomb.getText();
-                Options.row = Integer. parseInt(NbRow);
-                Options.col = Integer. parseInt(NbCol);
-                Options.col = Integer. parseInt(NbBomb);
-                reInitPanel();
+                
             }
         });
 
