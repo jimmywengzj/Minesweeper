@@ -136,26 +136,26 @@ public class Gui {
 
                 JPanel customMainPanel = new JPanel();
                 customMainPanel.setLayout(null);
-                customMainPanel.setPreferredSize(new Dimension(230, 200));
+                customMainPanel.setPreferredSize(new Dimension(235, 180));
                 JLabel customrow = new JLabel();
-                customrow.setText("row");
+                customrow.setText(Language.HEIGHT);
                 customrow.setBounds(20, 20, 100, 20);
                 JTextField customRow = new JTextField(Integer.toString(Options.row));
-                customRow.setBounds(165, 20, 40, 20);
+                customRow.setBounds(175, 20, 40, 20);
                 JLabel customcol = new JLabel();
-                customcol.setText("column");
+                customcol.setText(Language.WIDTH);
                 customcol.setBounds(20, 60, 100, 20);
                 JTextField customCol = new JTextField(Integer.toString(Options.col));
-                customCol.setBounds(165, 60, 40, 20);
+                customCol.setBounds(175, 60, 40, 20);
                 JLabel customnbBomb = new JLabel();
-                customnbBomb.setText("bomb number");
+                customnbBomb.setText(Language.MINES);
                 customnbBomb.setBounds(20, 100, 100, 20);
                 JTextField customNbBomb = new JTextField(Integer.toString(Options.nbBomb));
-                customNbBomb.setBounds(165, 100, 40, 20);
-                JButton ok = new JButton("OK");
-                ok.setBounds(120, 140, 85, 20);
-                JButton cancel = new JButton("Cancel");
-                cancel.setBounds(20, 140, 85, 20);
+                customNbBomb.setBounds(175, 100, 40, 20);
+                JButton ok = new JButton(Language.OK);
+                ok.setBounds(120, 140, 95, 20);
+                JButton cancel = new JButton(Language.CANCEL);
+                cancel.setBounds(20, 140, 95, 20);
 
                 ok.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
@@ -166,24 +166,12 @@ public class Gui {
                         int r = Integer.parseInt(NbRow);
                         int c = Integer.parseInt(NbCol);
                         int b = Integer.parseInt(NbBomb);
-                        if (r<9){
-                            r = 9;
-                        }
-                        if (c<9){
-                            c = 9;
-                        }
-                        if (r>24){
-                            r = 24;
-                        }
-                        if (c>30){
-                            c = 30;
-                        }
-                        if (b>(int)(0.9*r*c)){
-                            b = (int)(0.9*r*c);
-                        }
-                        if (b<10){
-                            b = 10;
-                        }
+                        if (r < 9) r = 9;
+                        if (c < 9) c = 9;
+                        if (r > 24) r = 24;
+                        if (c > 30) c = 30;
+                        if (b > (int)(0.9 * r * c)) b = (int)(0.9 * r * c);
+                        if (b < 10) b = 10;
                         Options.row = r;
                         Options.col = c;
                         Options.nbBomb = b;
@@ -207,7 +195,7 @@ public class Gui {
                 customFrame.add(customMainPanel);
 
                 customFrame.pack();
-                customFrame.setTitle("custom");
+                customFrame.setTitle(Language.CUSTOM_TITLE);
                 customFrame.setLocation(100, 100);
                 //customFrame.setSize(100,100);
                 customFrame.setResizable(false);
