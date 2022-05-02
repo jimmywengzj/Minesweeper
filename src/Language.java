@@ -23,6 +23,10 @@ public class Language {
     public static String HINT_LOGIC_SAFE="";
     public static String HINT_PROBABILITY="";
     public static String HINT_PROBABILITY_TITLE="";
+    public static String GUI_SCALE="";
+    public static String GUI_SCALE1="";
+    public static String GUI_SCALE2="";
+    public static String GUI_SCALE3="";
 
     public static void setLanguage(String source){
         // read "changeLANGUAGE_fr.properties" and change the LANGUAGE
@@ -52,5 +56,9 @@ public class Language {
         HINT_LOGIC_SAFE = rb.getString("HINT_LOGIC_SAFE");
         HINT_PROBABILITY = rb.getString("HINT_PROBABILITY");
         HINT_PROBABILITY_TITLE = rb.getString("HINT_PROBABILITY_TITLE");
+        GUI_SCALE = rb.getString("GUI_SCALE");
+        GUI_SCALE1 = rb.getString("GUI_SCALE1");
+        GUI_SCALE2 = rb.getString("GUI_SCALE2");
+        GUI_SCALE3 = rb.getString("GUI_SCALE3");
     }
 }

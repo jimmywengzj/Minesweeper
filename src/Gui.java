@@ -21,8 +21,8 @@ public class Gui {
     public static JFrame frame;
 
     public static JMenuBar menuBar;
-    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu, aiMenu;
-    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en, hint;
+    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu, aiMenu, guiScale;
+    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en, hint, scale1, scale2, scale3;
 
     public static JPanel mainPanel;
     public static JLabel corner_top_left, corner_top_right, corner_middle_left, corner_middle_right, corner_bottom_left, corner_bottom_right,
@@ -80,7 +80,10 @@ public class Gui {
         fr = new JMenuItem("Français");
         en = new JMenuItem("English");
         hint = new JMenuItem();
-        
+        scale1 = new JMenuItem();
+        scale2 = new JMenuItem();
+        scale3 = new JMenuItem();
+
         newgame.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 reInitPanel();
@@ -188,6 +191,25 @@ public class Gui {
             }
         });
 
+        scale1.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.scale = 1;
+                reInitPanel();
+            }
+        });
+        scale2.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.scale = 2;
+                reInitPanel();
+            }
+        });
+        scale3.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.scale = 3;
+                reInitPanel();
+            }
+        });
+
         hint.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 if(game.status != Game.STATUS_STARTED) {
@@ -214,13 +236,17 @@ public class Gui {
                                                     changeJButtonImageToColor(cell[x][y], Color.GREEN);
                                                     break;
                         case Solver.PROBABILITY :   JOptionPane.showMessageDialog(frame, Language.HINT_PROBABILITY);
+
+                                                    int imageDimension = new ImageIcon("resources/" + Options.resource + "/0.png").getIconWidth();
                                                     JFrame probFrame = new JFrame(Language.HINT_PROBABILITY_TITLE);
                                                     JTable jTable = new JTable(prob, prob[0]);
                                                     jTable.setTableHeader(null);
-                                                    jTable.setFont(new Font("Serif", Font.PLAIN, 13));
+                                                    jTable.setFont(new Font("Serif", Font.PLAIN, 13 * Options.scale));
+                                                    jTable.setRowHeight(imageDimension * Options.scale);
+
                                                     JScrollPane jScrollPane = new JScrollPane(jTable);
-                                                    int imageDimension = new ImageIcon("resources/" + Options.resource + "/0.png").getIconWidth();
                                                     jScrollPane.setPreferredSize(new Dimension(imageDimension * game.col * Options.scale + 3, imageDimension * game.row * Options.scale + 3));
+                                                    
                                                     probFrame.add(jScrollPane);
                                                     probFrame.pack();
                                                     probFrame.setLocation(400, 180);
@@ -238,6 +264,7 @@ public class Gui {
         languageMenu = new JMenu();
         resourceMenu = new JMenu();
         aiMenu = new JMenu();
+        guiScale = new JMenu();
         
         //创建File对象
         File resourcesFolder = new File("../Minesweeper/resources");
@@ -268,7 +295,8 @@ public class Gui {
 
         //将次级菜单加入option
         languageMenu.add(cn); languageMenu.add(fr); languageMenu.add(en);
-        optionMenu.add(languageMenu); optionMenu.add(resourceMenu);
+        guiScale.add(scale1); guiScale.add(scale2); guiScale.add(scale3);
+        optionMenu.add(languageMenu); optionMenu.add(resourceMenu); optionMenu.add(guiScale); 
 
         aiMenu.add(hint);
 
@@ -288,6 +316,10 @@ public class Gui {
         resourceMenu.setText(Language.RESOURCE);
         aiMenu.setText(Language.AI);
         hint.setText(Language.HINT);
+        guiScale.setText(Language.GUI_SCALE);
+        scale1.setText(Language.GUI_SCALE1);
+        scale2.setText(Language.GUI_SCALE2);
+        scale3.setText(Language.GUI_SCALE3);
     }
 
     // every coordinates in this method are the coordinates in gui scale 1 (except for the init of the panels). The scaling is done while creating each element
@@ -309,7 +341,7 @@ public class Gui {
         // init status bar (mineCnt, face, timer) panel
         statusBar = new JPanel();
         statusBar.setLayout(null);
-        statusBar.setLocation(x1, y1);
+        statusBar.setLocation(x1 * Options.scale, y1 * Options.scale);
         statusBar.setSize((x2 - x1) * Options.scale, (y2 - y1) * Options.scale);
         // set status bar color from color.png
         try {
