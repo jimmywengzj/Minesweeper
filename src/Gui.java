@@ -545,7 +545,6 @@ public class Gui {
             } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
                 game.playerBoard[i][j] = Game.QUESTION;
                 changeJButtonImage(cell[i][j], Game.QUESTION);
-                game.numCoveredCellsLeft ++;
             } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
                 game.playerBoard[i][j] = Game.UNCHECKED;
                 changeJButtonImage(cell[i][j], Game.UNCHECKED);
