@@ -41,6 +41,7 @@ public class Game {
         this.col = Options.col;
         this.row = Options.row;
         this.numMines = Options.nbBomb;
+        this.numMinesLeft = this.numMines;
         this.gameRule = Options.rule;
         this.playerBoard = new int[this.row][this.col];
         for(int i = 0; i < this.row; i++) {
