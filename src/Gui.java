@@ -662,7 +662,6 @@ public class Gui {
                     for(Point p : revealedCells) {
                         int info = game.getPlayerBoard(p.x, p.y);
                         changeJButtonImage(cell[p.x][p.y], info);
-                        System.out.println(p.x + " " + p.y);
                     }
                     
                     if(game.numCoveredCellsLeft == game.numMines) {
