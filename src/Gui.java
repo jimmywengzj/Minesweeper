@@ -324,7 +324,7 @@ public class Gui {
         ruleMenu = new JMenu();
         
         //创建File对象
-        File resourcesFolder = new File("../Minesweeper/resources");
+        File resourcesFolder = new File("resources");
         //获取该目录下的所有文件
         if(resourcesFolder != null){
             String[] resourcePacks = resourcesFolder.list();

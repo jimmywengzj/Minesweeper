@@ -1,9 +1,6 @@
 package src;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import  java.util.ResourceBundle;
-import java.util.Properties;
+import java.io.*;
+import  java.util.*;
 
 public class Options{
     public static int row;
@@ -16,23 +13,27 @@ public class Options{
 
     //read properties file
     public static void loadOptions(){
-        ResourceBundle rb = ResourceBundle.getBundle("options");
+        try (InputStream input = new FileInputStream("options.properties")) {
+            Properties properties = new Properties();
+            // load a properties file
+            properties.load(input);
 
-        row = Integer.parseInt(rb.getString("row"));
-        col = Integer.parseInt(rb.getString("col"));
-        nbBomb = Integer.parseInt(rb.getString("nbBomb"));
-        resource = rb.getString("resource");
-        scale = Integer.parseInt(rb.getString("scale"));
-        lang = rb.getString("lang");
-        Language.setLanguage(lang);
-        rule = Integer.parseInt(rb.getString("rule"));
+            row = Integer.parseInt(properties.getProperty("row"));
+            col = Integer.parseInt(properties.getProperty("col"));
+            nbBomb = Integer.parseInt(properties.getProperty("nbBomb"));
+            resource = properties.getProperty("resource");
+            scale = Integer.parseInt(properties.getProperty("scale"));
+            lang = properties.getProperty("lang");
+            Language.setLanguage(lang);
+            rule = Integer.parseInt(properties.getProperty("rule"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     //write properties file
     public static void writeOptions(){
-        try(
-            OutputStream outputStream = new FileOutputStream("options.properties");
-        ){
+        try(OutputStream outputStream = new FileOutputStream("options.properties");){
             Properties properties = new Properties();
 
             properties.setProperty("row", String.valueOf(row));
