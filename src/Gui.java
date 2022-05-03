@@ -2,6 +2,8 @@ package src;
 
 import src.util.*;
 import javax.swing.*;
+import javax.swing.Timer;
+
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -37,6 +39,9 @@ public class Gui {
     
     public static Game game;
 
+    public static Timer timer;
+    public static int second;
+
     public static void init() {
         frame = new JFrame();
         menuInit();
@@ -54,6 +59,8 @@ public class Gui {
             }
         });
         frame.setVisible(true);
+        mineCntUpdate();
+        simpleTimer();
     }
 
     public static void reInitPanel() {
@@ -63,6 +70,9 @@ public class Gui {
         frame.add(mainPanel);
         frame.pack();
         frame.revalidate();
+        mineCntUpdate();
+        timer.stop();
+        second = 0;
     }
 
     public static void menuInit(){
@@ -104,6 +114,8 @@ public class Gui {
                 game.numMinesLeft = game.numMines;
                 game.numCoveredCellsLeft = game.row * game.col;
                 game.status = Game.STATUS_STARTED;
+                timer.stop();
+                second = 0;
             }
         });
         beginner.addActionListener(new ActionListener(){
@@ -490,17 +502,14 @@ public class Gui {
                 cell[i][j].addMouseListener(new MouseAdapter() { 
                     public void mousePressed(MouseEvent e) { 
                         if(SwingUtilities.isRightMouseButton(e)) {
-                            System.out.println("alright");
                             rightPress(i2,j2);
                         } else if(SwingUtilities.isLeftMouseButton(e)) {
-                            System.out.println("hey you");
                             leftPress(i2,j2);
                         }
                     };
 
                     public void mouseExited(MouseEvent e) {
                         if(SwingUtilities.isRightMouseButton(e)) {
-                            System.out.println("alright I'm out");
                             rightExit(i2,j2);
                         }
                         if(SwingUtilities.isLeftMouseButton(e)) {
@@ -539,6 +548,7 @@ public class Gui {
         if(facePressed && !faceExited) {
             changeFaceImage("faceSmiley");
             reInitPanel();
+            timer.stop();
         }
         facePressed = false;
         faceExited = false;
@@ -587,7 +597,7 @@ public class Gui {
             if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
                 game.playerBoard[i][j] = Game.FLAG;
                 changeJButtonImage(cell[i][j], Game.FLAG);
-                game.numMinesLeft --;
+
             
             // update image
             } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
@@ -644,7 +654,8 @@ public class Gui {
             if(game.status == Game.STATUS_NOT_STARTED) {
                 game.status = Game.STATUS_STARTED;
                 game.initBoard(i, j);
-                System.out.println("yes");
+
+                timer.start();
             }
             if(game.status == Game.STATUS_STARTED) {
                 if(game.revealCell(i, j, revealedCells)) {
@@ -668,6 +679,7 @@ public class Gui {
                 } else {
                     changeFaceImage("faceSad");
                     game.status = Game.STATUS_LOST;
+                    timer.stop();
                     for(int m = 0; m < game.row; m++) {
                         for(int n = 0; n < game.col; n++) {
                             if(game.infoBoard[m][n] == Game.MINE) {
@@ -707,6 +719,19 @@ public class Gui {
     }
 
     /***
+     * change JLable image
+     * @param fileName
+     * @return
+     */
+    public static void changeJLabelImage(JLabel jLabel, String fileName) {
+        ImageIcon icon = new ImageIcon("resources/" + Options.resource + "/" + fileName);
+        int width = icon.getIconWidth() * Options.scale;
+        int height = icon.getIconHeight() * Options.scale;
+        Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        jLabel.setIcon(new ImageIcon(scaledImage));
+        
+    }
+    /***
      * set an image to a JLable
      * @param fileName file name of the image
      * @param x position of the JLable
@@ -744,14 +769,23 @@ public class Gui {
         return jButton;
     }
 
+    /***
+     * change Jbutton image
+     * @param jButton cell[i][j]
+     * @param n corresponding informaiton on the map
+     */
     public static void changeJButtonImage(JButton jButton, int n) {
         String fileName;
         switch (n) {
             case 1002:  fileName = "covered.png";
                         break;
             case 1003:  fileName = "flag.png";
+                        game.numMinesLeft --;
+                        mineCntUpdate();
                         break;
             case 1004:  fileName = "questionMark.png";
+                        game.numMinesLeft ++;
+                        mineCntUpdate();
                         break;
             case 1005:  fileName = "bomb.png";
                         break;
@@ -822,5 +856,33 @@ public class Gui {
     public static void gameInit(){
         game = new Game();
     }
+    
+    public static void simpleTimer() {
+        second = 0;
+        timer = new javax.swing.Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                second ++;
+                int timerHundreds = second/100;
+                int timerTens     = (second - second/100*100)/10;
+                int timerOnes     = second - second/100*100 - (second - second/100*100)/10*10;
+                
+                changeJLabelImage(timer_hundreds, "number" + Integer.toString(timerHundreds) + ".png");
+                changeJLabelImage(timer_tens, "number" + Integer.toString(timerTens) + ".png");
+                changeJLabelImage(timer_ones, "number" + Integer.toString(timerOnes) + ".png");
+            }
+        });
+    }
+    
+    public static void mineCntUpdate() {
+        int num  = game.numMinesLeft;
+        if (num < 0) num = 0;
+        int mineCntHundreds = num/100;
+        int mineCntTens     = (num - num/100*100)/10;
+        int mineCntOnes     = num - num/100*100 - (num - num/100*100)/10*10;
 
+        changeJLabelImage(mineCnt_hundreds, "number" + Integer.toString(mineCntHundreds) + ".png");
+        changeJLabelImage(mineCnt_tens, "number" + Integer.toString(mineCntTens) + ".png");
+        changeJLabelImage(mineCnt_ones, "number" + Integer.toString(mineCntOnes) + ".png");
+    }
 }
