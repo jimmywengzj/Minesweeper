@@ -444,6 +444,12 @@ public class Solver {
         return res;
     }
 
+    /**
+     * use the AI to solve the problem and return a hint for player
+     * @param game
+     * @param prob transfer the data of probabilities for mines of each cell, rounded in percentage. Only useful when no safe cell can be determined by logic
+     * @return a pair, key = hint type, value = the cell that is concerned. 
+     */
     public static Pair<Integer, Point> getHint(Game game, Integer prob[][]) {
         if (game.status != Game.STATUS_STARTED) return null;
 
@@ -494,6 +500,7 @@ public class Solver {
                 prob[x][y] = (int) Math.round(probGraph[x][y] * 100.0);
             }
         }
+        
         // no safe cells left
         return new Pair<Integer, Point> (PROBABILITY, new Point(0, 0));
     }

@@ -70,7 +70,6 @@ public class Gui {
         //加入次级菜单
         newgame = new JMenuItem();
         restart = new JMenuItem();
-        
         beginner = new JMenuItem();
         intermediate = new JMenuItem();
         expert = new JMenuItem();
@@ -201,8 +200,6 @@ public class Gui {
                 customFrame.setLocation(100, 100);
                 customFrame.setResizable(false);
                 customFrame.setVisible(true);
-
-                
             }
         });
 
@@ -427,7 +424,6 @@ public class Gui {
         statusBar.add(timer_tens);
         statusBar.add(timer_ones);
         statusBar.add(timer_background);
-
         
         face = setJButtonImage("face_Smiley.png", (x2 - x1 - getImageWidth("face_Smiley.png")) / 2, STATUS_BAR_BORDER_SIZE, 1, 1);
         face.setBorder(null);
@@ -530,11 +526,9 @@ public class Gui {
                         }
                     }
                 });
-
                 mainPanel.add(cell[i][j]);
             }
         }
-
     }
 
     public static void facePress() {
@@ -546,7 +540,6 @@ public class Gui {
             changeFaceImage("faceSmiley");
             reInitPanel();
         }
-
         facePressed = false;
         faceExited = false;
     }
@@ -623,7 +616,6 @@ public class Gui {
         if(game.playerBoard[i][j] == Game.UNCHECKED && leftPressed) {
             changeJButtonImage(cell[i][j], Game.UNCHECKED);
         }
-        
         leftExited = true;
     }
 
@@ -634,7 +626,6 @@ public class Gui {
             changeFaceImage("faceCurious");
         }
         
-
         if(game.playerBoard[i][j] == Game.UNCHECKED && (game.status == Game.STATUS_STARTED)) {
             changeJButtonImage(cell[i][j], 0);
         }
@@ -673,39 +664,23 @@ public class Gui {
                                 }
                             }
                         }
-
                     }
-
                 } else {
-                    
                     changeFaceImage("faceSad");
                     game.status = Game.STATUS_LOST;
                     for(int m = 0; m < game.row; m++) {
                         for(int n = 0; n < game.col; n++) {
-                            switch(game.playerBoard[m][n]) {
-                                case Game.FLAG: 
-
-                                    if(game.infoBoard[m][n] != Game.MINE) {
-                                        changeJButtonImage(cell[m][n], Game.WRONG_FLAG);
-                                    } 
-                                    break;
-                                
-                                default:
-                                    break;
-                            }
-                            switch(game.infoBoard[m][n]) {
-                                case Game.MINE:
-                                    changeJButtonImage(cell[m][n], Game.MINE);
+                            if(game.infoBoard[m][n] == Game.MINE) {
+                                changeJButtonImage(cell[m][n], Game.MINE);
+                            }else if(game.playerBoard[m][n] == Game.FLAG) {
+                                changeJButtonImage(cell[m][n], Game.WRONG_FLAG);
                             }
                         }
                     }
                     changeJButtonImage(cell[i][j], Game.WRONG_MINE);
                 }
             } 
-
-
         } 
-        
         leftExited = false;
     }
 
