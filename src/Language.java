@@ -34,6 +34,9 @@ public class Language {
     public static String OK="";
     public static String CANCEL="";
     public static String CUSTOM_TITLE="";
+    public static String RULE="";
+    public static String RULE_XP="";
+    public static String RULE_WIN7="";
 
     public static void setLanguage(String source){
         // read "changeLANGUAGE_fr.properties" and change the LANGUAGE
@@ -74,5 +77,8 @@ public class Language {
         OK = rb.getString("OK");
         CANCEL = rb.getString("CANCEL");
         CUSTOM_TITLE = rb.getString("CUSTOM_TITLE");
+        RULE = rb.getString("RULE");
+        RULE_XP = rb.getString("RULE_XP");
+        RULE_WIN7 = rb.getString("RULE_WIN7");
     }
 }

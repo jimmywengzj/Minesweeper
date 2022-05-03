@@ -5,21 +5,13 @@ import java.util.*;
 import java.util.List;
 
 public class Game {
-
     // game status 
     public static final int STATUS_NOT_STARTED = -2;
     public static final int STATUS_STARTED  = 0;
     public static final int STATUS_WON      = 1;
     public static final int STATUS_LOST     = -1;
 
-    // difficulty setting
-    public static final int DIFFICULTY_BEGINNER     = 101;
-    public static final int DIFFICULTY_INTERMEDIATE = 102;
-    public static final int DIFFICULTY_EXPERT       = 103;
-    public static final int DIFFICULTY_CUSTOM       = 104;
-    
     // status of each cell (player perspective)
-
     public static final int UNCHECKED = 1002;
     public static final int FLAG      = 1003; 
     public static final int QUESTION  = 1004;
@@ -49,7 +41,7 @@ public class Game {
         this.col = Options.col;
         this.row = Options.row;
         this.numMines = Options.nbBomb;
-        this.gameRule = GAME_RULE_WIN_XP; // assign this value for now
+        this.gameRule = Options.rule;
         this.playerBoard = new int[this.row][this.col];
         for(int i = 0; i < this.row; i++) {
             for(int j = 0; j < this.col; j++) {

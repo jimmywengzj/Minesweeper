@@ -21,8 +21,8 @@ public class Gui {
     public static JFrame frame;
 
     public static JMenuBar menuBar;
-    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu, aiMenu, guiScale;
-    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en, hint, scale1, scale2, scale3;
+    public static JMenu gameMenu, optionMenu, languageMenu, resourceMenu, aiMenu, guiScale, ruleMenu;
+    public static JMenuItem newgame, restart, beginner, intermediate, expert, custom, cn, fr, en, hint, scale1, scale2, scale3, ruleXp, ruleWin7;
 
     public static JPanel mainPanel;
     public static JLabel corner_top_left, corner_top_right, corner_middle_left, corner_middle_right, corner_bottom_left, corner_bottom_right,
@@ -82,6 +82,8 @@ public class Gui {
         scale1 = new JMenuItem();
         scale2 = new JMenuItem();
         scale3 = new JMenuItem();
+        ruleXp = new JMenuItem();
+        ruleWin7 = new JMenuItem();
 
         newgame.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -170,7 +172,7 @@ public class Gui {
                         if (c < 9) c = 9;
                         if (r > 24) r = 24;
                         if (c > 30) c = 30;
-                        if (b > (int)(0.9 * r * c)) b = (int)(0.9 * r * c);
+                        if (b > (r - 1) * (c - 1)) b = (r - 1) * (c - 1);
                         if (b < 10) b = 10;
                         Options.row = r;
                         Options.col = c;
@@ -243,6 +245,19 @@ public class Gui {
                 reInitPanel();
             }
         });
+        ruleXp.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.rule = Game.GAME_RULE_WIN_XP;
+                reInitPanel();
+            }
+        });
+        ruleWin7.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                Options.rule = Game.GAME_RULE_WIN_7;
+                reInitPanel();
+            }
+        });
+
 
         hint.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -299,6 +314,7 @@ public class Gui {
         resourceMenu = new JMenu();
         aiMenu = new JMenu();
         guiScale = new JMenu();
+        ruleMenu = new JMenu();
         
         //创建File对象
         File resourcesFolder = new File("../Minesweeper/resources");
@@ -322,10 +338,13 @@ public class Gui {
 
         updateMenuLanguage();
 
+        ruleMenu.add(ruleXp); ruleMenu.add(ruleWin7); 
         //将次级菜单加入Game
         gameMenu.add(newgame); gameMenu.add(restart);
         gameMenu.addSeparator();       //分割线
         gameMenu.add(beginner); gameMenu.add(intermediate); gameMenu.add(expert); gameMenu.add(custom);
+        gameMenu.addSeparator();
+        gameMenu.add(ruleMenu);
 
         //将次级菜单加入option
         languageMenu.add(cn); languageMenu.add(fr); languageMenu.add(en);
@@ -355,6 +374,9 @@ public class Gui {
         scale1.setText(Language.GUI_SCALE1);
         scale2.setText(Language.GUI_SCALE2);
         scale3.setText(Language.GUI_SCALE3);
+        ruleMenu.setText(Language.RULE);
+        ruleXp.setText(Language.RULE_XP);
+        ruleWin7.setText(Language.RULE_WIN7);
     }
 
     // every coordinates in this method are the coordinates in gui scale 1 (except for the init of the panels). The scaling is done while creating each element

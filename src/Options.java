@@ -12,6 +12,7 @@ public class Options{
     public static String resource = "";
     public static int scale;
     public static String lang = "";
+    public static int rule;
 
     //read properties file
     public static void loadOptions(){
@@ -24,6 +25,7 @@ public class Options{
         scale = Integer.parseInt(rb.getString("scale"));
         lang = rb.getString("lang");
         Language.setLanguage(lang);
+        rule = Integer.parseInt(rb.getString("rule"));
     }
     
     //write properties file
@@ -39,6 +41,7 @@ public class Options{
             properties.setProperty("resource", resource);
             properties.setProperty("scale", String.valueOf(scale));
             properties.setProperty("lang", lang);
+            properties.setProperty("rule", String.valueOf(rule));
 
             properties.store(outputStream, "Game options");
         }catch(IOException e){
