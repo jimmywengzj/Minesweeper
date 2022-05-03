@@ -49,18 +49,13 @@ public class Game {
             }
         }
         this.infoBoard = new int[this.row][this.col];
-
     }
-
-
 
     /**
      * initialize the board on the first click
      * @param x
      * @param y
      */
-
-
     public void initBoard(int x, int y) {  // (x,y) coordinates of the first click
         // place mine using Fisher-Yates shuffle
         this.mineBoard = new boolean[this.row][this.col];
@@ -126,33 +121,6 @@ public class Game {
             numMinesLeft = numMines;
             numCoveredCellsLeft = this.row * this.col;
         }
-            // not knowing what to do with the last scenario...
-        for(int j = 0; j < this.row * this.col; j++) {
-            int count = 0;
-            int jXLocation = j / this.col;
-            int jYLocation = j % this.col; 
-
-            if(mineBoard[jXLocation][jYLocation]) {
-                infoBoard[jXLocation][jYLocation] = MINE; 
-            } else {
-                // add value to each cell the number of nearby mines
-                
-                if (jXLocation - 1 >= 0) {
-                    if (jYLocation - 1 >= 0 && this.mineBoard[jXLocation - 1][jYLocation - 1]) count++;
-                    if (this.mineBoard[jXLocation - 1][jYLocation]) count++;
-                    if (jYLocation + 1 < this.col && this.mineBoard[jXLocation - 1][jYLocation + 1]) count++;
-                }
-                if (jXLocation + 1 < this.row) {
-                    if (jYLocation - 1 >= 0 && this.mineBoard[jXLocation + 1][jYLocation - 1]) count++;
-                    if (this.mineBoard[jXLocation + 1][jYLocation]) count++;
-                    if (jYLocation + 1 < this.col && this.mineBoard[jXLocation + 1][jYLocation + 1]) count++;
-                }
-                if (jYLocation - 1 >= 0 && this.mineBoard[jXLocation][jYLocation - 1]) count++ ;
-                if (jYLocation + 1 < this.col && this.mineBoard[jXLocation][jYLocation + 1]) count++;
-                
-                infoBoard[jXLocation][jYLocation] = count;
-            }
-        }   
     }
     
     /**
@@ -179,11 +147,6 @@ public class Game {
         }
         return true;
     }
-
-
-    // to be continued... 
-    // public int getUncheckedCellLeft() { }
-
 
     public int getPlayerBoard(int x, int y) {
         return this.playerBoard[x][y];

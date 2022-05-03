@@ -483,8 +483,6 @@ public class Solver {
         }
 
         // probability analysis
-        //probResult = probabilityAnalysis(game);
-        //double[][] probGraph = probResult.probGraph;
         double[][] probGraph = probabilityAnalysis(game).probGraph;
         for (int x = 0; x < game.row; x++) {
             for (int y = 0; y < game.col; y++) {

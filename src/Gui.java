@@ -199,9 +199,7 @@ public class Gui {
                 customFrame.pack();
                 customFrame.setTitle(Language.CUSTOM_TITLE);
                 customFrame.setLocation(100, 100);
-                //customFrame.setSize(100,100);
                 customFrame.setResizable(false);
-                //customFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 customFrame.setVisible(true);
 
                 
