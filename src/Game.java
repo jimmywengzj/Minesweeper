@@ -121,6 +121,19 @@ public class Game {
             numMinesLeft = numMines;
             numCoveredCellsLeft = this.row * this.col;
         }
+        for(int i = 0; i < this.row; i++) {
+            for(int j = 0; j < this.col; j++) {
+                if (mineBoard[i][j]) {
+                    infoBoard[i][j] = MINE;
+                    continue;
+                }
+                int count = 0;
+                for(Point p : getSurroundingCells(i, j)) {
+                    if(mineBoard[p.x][p.y]) count++;
+                }
+                infoBoard[i][j] = count;
+            }
+        }
     }
     
     /**
