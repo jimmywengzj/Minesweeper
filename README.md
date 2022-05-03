@@ -18,7 +18,7 @@ A part des fonctionnalités existantes dans Minesweeper classique, on a enrichi 
   * Pour changer la taille de la fenêtre, allez dans **Option-Taille de la fenêtre** et changez la taille de la fenêtre selon vos besoins.
 
 ### Comment utiliser l'IA ?
-Si vous êtes bloqué, cliquez sur le bouton IA dans la barre de menu, et cliquez sur le bouton Astuce. Une notification popup apparaîtra, soit en mettant en évidence la zone à prendre en compte, soit en indiquant qu'il n'y a pas de case à déterminer. S'il n'y a pas de cellule à déterminer, une autre fenêtre apparaîtra, indiquant le taux de probabilité de chaque cellule.  
+Si vous êtes bloqué, cliquez sur le bouton IA dans la barre de menu, et cliquez sur le bouton Astuce. Une notification popup apparaîtra, soit en mettant en évidence la zone à prendre en compte, soit en indiquant qu'il n'y a pas de case à déterminer. S'il n'y a pas de cellule à déterminer, une autre fenêtre apparaîtra, indiquant probabilité d'avoir la mine dans chaque case.  
 
 ### File System
 ```
