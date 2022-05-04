@@ -596,9 +596,7 @@ public class Gui {
         if(game.status == Game.STATUS_STARTED) {
             if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
                 game.playerBoard[i][j] = Game.FLAG;
-                changeJButtonImage(cell[i][j], Game.FLAG);
-
-            
+                changeJButtonImage(cell[i][j], Game.FLAG); 
             // update image
             } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
                 game.playerBoard[i][j] = Game.QUESTION;
@@ -617,10 +615,9 @@ public class Gui {
         
     }
 
-    public static void rightClick(int i, int j) {
+    public static void rightClick(int i, int j) { // overshadowed rightPress and rightRelease since separate actions
 
     }
-
 
     public static void leftExit(int i, int j) {
         if(game.playerBoard[i][j] == Game.UNCHECKED && leftPressed) {
@@ -630,14 +627,14 @@ public class Gui {
     }
 
     public static void leftPress(int i, int j) {
-        if(game.status == Game.STATUS_LOST) {
+        if(game.status == Game.STATUS_LOST) { // keep the sad face if already lost
             changeFaceImage("faceSad");
-        } else if(game.status != Game.STATUS_WON) {
-            changeFaceImage("faceCurious");
+        } else if(game.status != Game.STATUS_WON) { // if left pressed and not yet released
+            changeFaceImage("faceCurious"); 
         }
         
-        if(game.playerBoard[i][j] == Game.UNCHECKED && (game.status == Game.STATUS_STARTED)) {
-            changeJButtonImage(cell[i][j], 0);
+        if(game.playerBoard[i][j] == Game.UNCHECKED && (game.status == Game.STATUS_STARTED)) { // press effect of covered cell
+            changeJButtonImage(cell[i][j], 0); 
         }
         
         leftPressed = true;
@@ -651,20 +648,20 @@ public class Gui {
         if(game.playerBoard[i][j] == Game.UNCHECKED && !leftExited && leftPressed) { // if left click on unchecked block
             
             HashSet<Point> revealedCells = new HashSet<Point>();
-            if(game.status == Game.STATUS_NOT_STARTED) {
+            if(game.status == Game.STATUS_NOT_STARTED) { // change game status, initialize board and start timer
                 game.status = Game.STATUS_STARTED;
                 game.initBoard(i, j);
 
                 timer.start();
             }
-            if(game.status == Game.STATUS_STARTED) {
+            if(game.status == Game.STATUS_STARTED) { // if first click and started the game
                 if(game.revealCell(i, j, revealedCells)) {
                     for(Point p : revealedCells) {
                         int info = game.getPlayerBoard(p.x, p.y);
                         changeJButtonImage(cell[p.x][p.y], info);
                     }
                     
-                    if(game.numCoveredCellsLeft == game.numMines) {
+                    if(game.numCoveredCellsLeft == game.numMines) { // if cleared all cells without mines
                         game.status = Game.STATUS_WON;
                         changeFaceImage("faceCool");
                         for(int m = 0; m < game.row; m++) {
@@ -675,7 +672,7 @@ public class Gui {
                             }
                         }
                     }
-                } else {
+                } else { // if selected on mine
                     changeFaceImage("faceSad");
                     game.status = Game.STATUS_LOST;
                     timer.stop();
@@ -695,7 +692,7 @@ public class Gui {
         leftExited = false;
     }
 
-    public static void leftClick(int i, int j) {
+    public static void leftClick(int i, int j) { // overshadowed by leftPress and leftRelease...
         
     }
     
@@ -771,7 +768,7 @@ public class Gui {
     /***
      * change Jbutton image
      * @param jButton cell[i][j]
-     * @param n corresponding informaiton on the map
+     * @param n corresponding information on the map
      */
     public static void changeJButtonImage(JButton jButton, int n) {
         String fileName;
@@ -801,7 +798,11 @@ public class Gui {
         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
         jButton.setIcon(new ImageIcon(scaledImage));
     }
-
+    /***
+     * change the selected cell to plain color of choice
+     * @param jButton cell[i][j]
+     * @param c color of choice
+     */
     public static void changeJButtonImageToColor(JButton jButton, Color c) {
         Icon icon = jButton.getIcon();
         
@@ -814,7 +815,12 @@ public class Gui {
 
         jButton.setIcon(new ImageIcon(bufferedImage));
     }
-
+    
+    /***
+     * Setup of the border of the selected cell to desired color
+     * @param jButton selected cell[i][j]
+     * @param c Color of the surrounding highlight
+     */
     public static void setJButtonColoredBorder(JButton jButton, Color c) {
         Icon icon = jButton.getIcon();
         
@@ -831,6 +837,10 @@ public class Gui {
         jButton.setIcon(new ImageIcon(bufferedImage));
     }
 
+    /***
+     * change the image of the icon to the respective face types
+     * @param faceType String representing the face types
+     */
     public static void changeFaceImage(String faceType) {
         String fileName;
         switch (faceType) {
@@ -851,11 +861,17 @@ public class Gui {
         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
         face.setIcon(new ImageIcon(scaledImage));
     }
-
+   
+    /***
+     * initialize game
+     */
     public static void gameInit(){
         game = new Game();
     }
     
+    /***
+     * create a simple timer to show time on the top right corner
+     */
     public static void simpleTimer() {
         second = 0;
         timer = new javax.swing.Timer(1000, new ActionListener() {
@@ -873,6 +889,10 @@ public class Gui {
         });
     }
     
+
+    /***
+     * update number of mines left to the top left corner
+     */
     public static void mineCntUpdate() {
         int num  = game.numMinesLeft;
         if (num < 0) num = 0;

@@ -36,7 +36,7 @@ public class Game {
     protected int numCoveredCellsLeft;  // cells including unchecked, flag, and question.
     protected int numMinesLeft;     // depending on the number of mines initially planted and the number of flags
 
-    public Game () {
+    public Game () {    // initialization of the game
         status = STATUS_NOT_STARTED;
         this.col = Options.col;
         this.row = Options.row;
@@ -161,19 +161,37 @@ public class Game {
         }
         return true;
     }
-
+    
+    /**
+     * get playerBoard information of the selected cell[x][y]
+     * @param x
+     * @param y
+     * @return an int containing playerBoard information of this cell 
+     */
     public int getPlayerBoard(int x, int y) {
         return this.playerBoard[x][y];
     }
-
+    
+    /**
+     * get playerBoard information in a 2D table
+     * @return int[][]
+     */
     public int[][] getPlayerBoard() {
         return this.playerBoard;
     }
-
+    
+    /**
+     * get number of covered cells left
+     * @return int
+     */
     public int getCoveredCellsLeft() {
         return this.numCoveredCellsLeft;
     }
 
+    /**
+     * return the coordinates of the cell that is wrong-flagged (used solely for Solver)
+     * @return Point containing x and y information
+     */
     public Point checkWrongFlag(){
         for (int x = 0; x < this.row; x++) {
             for (int y = 0; y < this.col; y++) {
@@ -211,7 +229,7 @@ public class Game {
      * check if the coordinates are within the range of the board
      * @param x
      * @param y
-     * @return if the coordinates is in range
+     * @return if the coordinates are in range
      */
     public boolean inRange(int x, int y) {
         return x >= 0 && x < this.row && y >= 0 && y < this.col;
