@@ -663,6 +663,7 @@ public class Gui {
                     
                     if(game.numCoveredCellsLeft == game.numMines) { // if cleared all cells without mines
                         game.status = Game.STATUS_WON;
+                        timer.stop();
                         changeFaceImage("faceCool");
                         for(int m = 0; m < game.row; m++) {
                             for(int n = 0; n < game.col; n++) {
