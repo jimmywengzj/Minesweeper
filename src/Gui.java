@@ -499,7 +499,7 @@ public class Gui {
                 cell[i][j].setBorder(null);
                 final int i2 = i;
                 final int j2 = j;
-                cell[i][j].addMouseListener(new MouseAdapter() { 
+                cell[i][j].addMouseListener(new MouseAdapter() { // add mouse listeners
                     public void mousePressed(MouseEvent e) { 
                         if(SwingUtilities.isRightMouseButton(e)) {
                             rightPress(i2,j2);
@@ -540,11 +540,11 @@ public class Gui {
         }
     }
 
-    public static void facePress() {
+    public static void facePress() { // if pressed on face icon
         facePressed = true;
     }
 
-    public static void faceRelease() {
+    public static void faceRelease() { // if released position still on face icon
         if(facePressed && !faceExited) {
             changeFaceImage("faceSmiley");
             reInitPanel();
@@ -554,11 +554,11 @@ public class Gui {
         faceExited = false;
     }
 
-    public static void faceExit() {
+    public static void faceExit() { // if cursor exited the face icon when pressed
         faceExited = true;
     }
 
-    public static void rightExit(int i, int j) {
+    public static void rightExit(int i, int j) { // if right mouse button exited the icon when pressed
         if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) {
             for(Point p : game.getSurroundingCells(i,j)) {
                 if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
@@ -568,7 +568,7 @@ public class Gui {
         }
     }
 
-    public static void rightRelease(int i, int j) {
+    public static void rightRelease(int i, int j) { // if released position of right mouse button still in cell[i][j]
         if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0 && game.status == Game.STATUS_STARTED) {
             int numFlags = 0;
             for(Point p : game.getSurroundingCells(i,j)) {
@@ -592,19 +592,19 @@ public class Gui {
         }
     }
 
-    public static void rightPress(int i, int j) {
+    public static void rightPress(int i, int j) { // if right press on cell[i][j]
         if(game.status == Game.STATUS_STARTED) {
-            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right click on unchecked block
+            if(game.playerBoard[i][j] == Game.UNCHECKED) { // if right press on unchecked block
                 game.playerBoard[i][j] = Game.FLAG;
                 changeJButtonImage(cell[i][j], Game.FLAG); 
             // update image
-            } else if(game.playerBoard[i][j] == Game.FLAG) { // if right click on flag
+            } else if(game.playerBoard[i][j] == Game.FLAG) { // if right press on flag
                 game.playerBoard[i][j] = Game.QUESTION;
                 changeJButtonImage(cell[i][j], Game.QUESTION);
-            } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right click on question mark
+            } else if(game.playerBoard[i][j] == Game.QUESTION) { // if right press on question mark
                 game.playerBoard[i][j] = Game.UNCHECKED;
                 changeJButtonImage(cell[i][j], Game.UNCHECKED);
-            } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right click on checked and numbered block
+            } else if(game.playerBoard[i][j] <= 8 && game.playerBoard[i][j] > 0) { // if right press on checked and numbered block
                 for(Point p : game.getSurroundingCells(i,j)) {
                     if(game.playerBoard[p.x][p.y] == Game.UNCHECKED) {
                         changeJButtonImage(cell[p.x][p.y], 0);
@@ -619,14 +619,14 @@ public class Gui {
 
     }
 
-    public static void leftExit(int i, int j) {
+    public static void leftExit(int i, int j) { // if cursor left the cell[i][j] area when left button pressed
         if(game.playerBoard[i][j] == Game.UNCHECKED && leftPressed) {
             changeJButtonImage(cell[i][j], Game.UNCHECKED);
         }
         leftExited = true;
     }
 
-    public static void leftPress(int i, int j) {
+    public static void leftPress(int i, int j) { // if left press on cell[i][j]
         if(game.status == Game.STATUS_LOST) { // keep the sad face if already lost
             changeFaceImage("faceSad");
         } else if(game.status != Game.STATUS_WON) { // if left pressed and not yet released
@@ -640,7 +640,7 @@ public class Gui {
         leftPressed = true;
     }
 
-    public static void leftRelease(int i, int j) {
+    public static void leftRelease(int i, int j) { // if left button release in cell[i][j] area
         if(game.status == Game.STATUS_STARTED || game.status == Game.STATUS_NOT_STARTED) {
             changeFaceImage("faceSmiley");
         }
