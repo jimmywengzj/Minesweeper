@@ -1,6 +1,12 @@
 # Minesweeper
 Github Repository: <https://github.com/jimmywengzj/Minesweeper>
 
+Pour exécuter cet application, double-clic le fichier Minesweeper.jar, ou faire le command : 
+```
+java -jar Minesweeper.jar
+```
+Le class principal est /src/Minesweeper.java
+
 ### Qu'est-ce que Minesweeper ?
 Minesweeper est un jeu de démineur dont le but est de localiser des mines cachées et découvrir toutes les cases libres sans faire exploser les mines dans une grille représentant un champ de mines virtuel, avec pour seule indication le nombre de mines dans les zones adjacentes. 
 
@@ -44,5 +50,5 @@ Minesweeper
 └───language
     ├───En.properties
     ├───Fr.properties
-    └───Zh.tpropertiesxt
+    └───Zh.tproperties
 ```
